@@ -136,7 +136,8 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       )),
                   Padding(
-                    padding: EdgeInsets.only(top: 50),
+                    padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height / 100 * 10),
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 0.0, sigmaY: 0.0),
                       child: Container(
@@ -168,7 +169,8 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 50),
+                    padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height / 100 * 15),
                     child: InkWell(
                       onTap: () {
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
