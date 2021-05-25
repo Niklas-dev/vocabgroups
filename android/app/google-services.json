@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "47769324117",
+    "project_id": "vocalgroups",
+    "storage_bucket": "vocalgroups.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:47769324117:android:f3185eaa64e0c9544fe2dc",
+        "android_client_info": {
+          "package_name": "com.niklas.vocalgroups"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "47769324117-857qe1m5h9qcdgk94egokb1sastsupai.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZtq877raTCl0CUoZRXCSo6kbiAE8FlNs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "47769324117-857qe1m5h9qcdgk94egokb1sastsupai.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
