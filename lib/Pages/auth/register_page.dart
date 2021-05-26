@@ -46,12 +46,15 @@ class _RegisterPageState extends State<RegisterPage> {
                         bottom: 80),
                     child: Column(
                       children: [
-                        Text(
-                          "VocabGroups",
-                          style: TextStyle(
-                            fontSize: 50,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.white,
+                        Container(
+                          height: MediaQuery.of(context).size.width / 100 * 15,
+                          width: MediaQuery.of(context).size.width / 100 * 80,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              fit: BoxFit.fitWidth,
+                              image: AssetImage(
+                                  'assets/logo/logo_white_large.png'),
+                            ),
                           ),
                         ),
                         Text(

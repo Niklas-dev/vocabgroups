@@ -17,11 +17,11 @@ class _HomeTabState extends State<HomeTab> {
         child: Center(
           child: Container(
             child: IconButton(
-              onPressed: () {
+              onPressed: () async {
                 AuthenticationService().signOut();
-
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => LoginPage()));
+                Future.delayed(Duration(milliseconds: 300)).then((value) =>
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => LoginPage())));
               },
               icon: Icon(Icons.logout),
             ),
