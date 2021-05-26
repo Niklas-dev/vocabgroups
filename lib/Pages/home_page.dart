@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
+import '../keyboard_check.dart';
 import 'Tabs/book_tab.dart';
 import 'Tabs/books_tab.dart';
 import 'Tabs/groups_tab.dart';
@@ -30,17 +31,39 @@ class _HomePageState extends State<HomePage> {
     return tabs[index];
   }
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
   void inputData() async {
-    final User user = await auth.currentUser!;
+    User user = auth.currentUser!;
     final uid = user.uid;
     // here you write the codes to input the data into firestore
   }
 
   @override
   Widget build(BuildContext context) {
-    inputData();
+    //inputData();
 
     return Scaffold(
+      floatingActionButton: KeyboardVisibilityBuilder(
+          builder: (context, child, isKeyboardVisible) {
+            if (isKeyboardVisible) {
+              return FloatingActionButton(
+                onPressed: () {
+                  FocusScope.of(context).unfocus();
+                },
+                child: Icon(Icons.close),
+              );
+            } else {
+              return Container();
+              // build layout for invisible keyboard
+            }
+          },
+          child: Text(
+              "") // this widget goes to the builder's child property. Made for better performance.
+          ),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.only(bottom: 2.5),
         child: GNav(
@@ -51,14 +74,14 @@ class _HomePageState extends State<HomePage> {
           // tab button border // tab button shadow
           curve: Curves.easeOutExpo, // tab animation curves
           duration: Duration(milliseconds: 300), // tab animation duration
-          gap: 8, // the tab button gap between icon and text
+          gap: 4, // the tab button gap between icon and text
           color: Color(0xff112d4e), // unselected icon color
           activeColor: Color(0xff3f72af), // selected icon and text color
           iconSize: 24, // tab button icon size
           tabBackgroundColor:
               Colors.purple.withOpacity(0.1), // selected tab background color
           padding: EdgeInsets.symmetric(
-              horizontal: 15, vertical: 10), // navigation bar padding
+              horizontal: 10, vertical: 10), // navigation bar padding
           tabs: [
             GButton(
               icon: Icons.home,

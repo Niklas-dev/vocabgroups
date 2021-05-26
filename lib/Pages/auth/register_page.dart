@@ -81,6 +81,11 @@ class _RegisterPageState extends State<RegisterPage> {
                           },
                           style: TextStyle(color: Colors.white),
                           decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: MediaQuery.of(context).size.height /
+                                    100 *
+                                    2.5,
+                                horizontal: 10.0),
                             labelText: 'Username',
                             labelStyle: TextStyle(color: Colors.white),
                             border: OutlineInputBorder(
@@ -114,6 +119,11 @@ class _RegisterPageState extends State<RegisterPage> {
                           },
                           style: TextStyle(color: Colors.white),
                           decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: MediaQuery.of(context).size.height /
+                                    100 *
+                                    2.5,
+                                horizontal: 10.0),
                             labelText: 'Email',
                             labelStyle: TextStyle(color: Colors.white),
                             border: OutlineInputBorder(
@@ -148,6 +158,11 @@ class _RegisterPageState extends State<RegisterPage> {
                           obscureText: hidePassword,
                           style: TextStyle(color: Colors.white),
                           decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: MediaQuery.of(context).size.height /
+                                    100 *
+                                    2.5,
+                                horizontal: 10.0),
                             labelText: 'Password',
                             labelStyle: TextStyle(color: Colors.white),
                             border: OutlineInputBorder(
@@ -180,8 +195,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 0.0, sigmaY: 0.0),
                       child: Container(
-                        width: 200,
-                        height: 50,
+                        width: MediaQuery.of(context).size.width / 100 * 50,
+                        height: MediaQuery.of(context).size.height / 100 * 8,
                         decoration: BoxDecoration(
                           color: Colors.transparent.withOpacity(0.4),
                           borderRadius: BorderRadius.circular(8),
@@ -210,7 +225,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height / 100 * 6),
+                        top: MediaQuery.of(context).size.height / 100 * 10),
                     child: InkWell(
                       onTap: () {
                         Navigator.of(context).pushReplacement(MaterialPageRoute(

@@ -77,6 +77,11 @@ class _LoginPageState extends State<LoginPage> {
                             },
                             style: TextStyle(color: Colors.white),
                             decoration: InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical: MediaQuery.of(context).size.height /
+                                      100 *
+                                      2.5,
+                                  horizontal: 10.0),
                               labelText: 'Email',
                               labelStyle: TextStyle(color: Colors.white),
                               border: OutlineInputBorder(
@@ -110,6 +115,11 @@ class _LoginPageState extends State<LoginPage> {
                             obscureText: hidePassword,
                             style: TextStyle(color: Colors.white),
                             decoration: InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical: MediaQuery.of(context).size.height /
+                                      100 *
+                                      2.5,
+                                  horizontal: 10.0),
                               labelText: 'Password',
                               labelStyle: TextStyle(color: Colors.white),
                               border: OutlineInputBorder(
@@ -141,8 +151,8 @@ class _LoginPageState extends State<LoginPage> {
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 0.0, sigmaY: 0.0),
                       child: Container(
-                        width: 100,
-                        height: 50,
+                        width: MediaQuery.of(context).size.width / 100 * 30,
+                        height: MediaQuery.of(context).size.height / 100 * 8,
                         decoration: BoxDecoration(
                           color: Colors.transparent.withOpacity(0.4),
                           borderRadius: BorderRadius.circular(8),
@@ -170,7 +180,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height / 100 * 15),
+                        top: MediaQuery.of(context).size.height / 100 * 16),
                     child: InkWell(
                       onTap: () {
                         Navigator.of(context).pushReplacement(MaterialPageRoute(

@@ -24,6 +24,8 @@ dependencies:
   firebase_core: ^1.2.0
   firebase_auth: ^1.2.0
 
+  keyboard_visibility: ^0.5.6
+
   google_nav_bar: ^5.0.5
 
   translator: ^0.1.7
