@@ -50,11 +50,15 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: KeyboardVisibilityBuilder(
           builder: (context, child, isKeyboardVisible) {
             if (isKeyboardVisible) {
-              return FloatingActionButton(
-                onPressed: () {
-                  FocusScope.of(context).unfocus();
-                },
-                child: Icon(Icons.close),
+              return Container(
+                height: 60,
+                width: 60,
+                child: FloatingActionButton(
+                  onPressed: () {
+                    FocusScope.of(context).unfocus();
+                  },
+                  child: Icon(Icons.arrow_downward),
+                ),
               );
             } else {
               return Container();
