@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'Pages/auth/login_page.dart';
+import 'package:vocalgroups/Pages/auth/login_page.dart';
 
 class App extends StatelessWidget {
   @override
