@@ -214,29 +214,32 @@ class _TranslatorTabState extends State<TranslatorTab> {
                         ),
                       ],
                     ),
-                    InkWell(
-                      onTap: () async {
-                        outputLang.text = await translate();
-                      },
-                      child: Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Color(0xffdbe2ef)),
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            "Translate",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Color(0xff112d4e),
-                              fontWeight: FontWeight.w900,
-                              fontSize: 25,
+                    Padding(
+                      padding: EdgeInsets.all(5),
+                      child: InkWell(
+                        onTap: () async {
+                          outputLang.text = await translate();
+                        },
+                        child: Container(
+                          height: 50,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Color(0xffdbe2ef)),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              "Translate",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Color(0xff112d4e),
+                                fontWeight: FontWeight.w900,
+                                fontSize: 25,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
+                    )
                   ],
                 ),
               ),
