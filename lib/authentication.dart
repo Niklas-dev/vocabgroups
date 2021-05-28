@@ -9,25 +9,27 @@ class AuthenticationService {
     _auth.signOut();
   }
 
-  Future<String?> signIn(String email, String password) async {
+  Future signIn(String email, String password) async {
     try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
-      print("Signed In");
-      return "Signed In";
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      User user = userCredential.user!;
+      return user;
     } on FirebaseAuthException catch (e) {
       print(e.message);
       return e.message;
     }
   }
 
-  Future<String?> signUp(String email, String password, String username) async {
+  Future signUp(String email, String password, String username) async {
     try {
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
       User user = userCredential.user!;
       user.updateProfile(displayName: username);
-      return "Signed Up";
+      return user;
     } on FirebaseAuthException catch (e) {
+      print(e.message);
       return e.message;
     }
   }

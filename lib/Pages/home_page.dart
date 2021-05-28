@@ -16,8 +16,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final FirebaseAuth auth = FirebaseAuth.instance;
-
   int currentIndex = 0;
   List<Widget> tabs = [
     HomeTab(),
@@ -36,15 +34,11 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
-  void inputData() async {
-    User user = auth.currentUser!;
-    final uid = user.uid;
-    // here you write the codes to input the data into firestore
-  }
+  void inputData() {}
 
   @override
   Widget build(BuildContext context) {
-    //inputData();
+    inputData();
 
     return Scaffold(
       floatingActionButton: KeyboardVisibilityBuilder(

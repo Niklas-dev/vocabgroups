@@ -225,6 +225,7 @@ class _LoginPageState extends State<LoginPage> {
             print('User is currently signed out!');
           } else {
             print('User is signed in!');
+            print(auth.currentUser!.email);
             Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => HomePage()));
           }
