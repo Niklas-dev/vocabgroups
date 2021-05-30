@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:vocalgroups/Authentication/Database.dart';
 import 'package:vocalgroups/Authentication/authentication.dart';
 import 'package:vocalgroups/Pages/auth/login_page.dart';
-import 'package:vocalgroups/Utilis/book.dart';
+
+import '../home_page.dart';
 
 class HomeTab extends StatefulWidget {
   @override
@@ -24,6 +24,11 @@ class _HomeTabState extends State<HomeTab> {
     super.initState();
   }
 
+  void dispose() {
+    MaterialPageRoute(builder: (context) => HomePage()).dispose();
+    super.dispose();
+  }
+
   getUser() {
     DatabaseService().dataCollection.get().then((QuerySnapshot snapshot) {
       snapshot.docs.forEach((DocumentSnapshot element) {
@@ -32,29 +37,26 @@ class _HomeTabState extends State<HomeTab> {
     });
   }
 
-  getCurrentUser() async {
-    final userRef = DatabaseService()
-        .dataCollection
-        .doc(FirebaseAuth.instance.currentUser!.uid);
+  DocumentSnapshot? lastEvent;
+  bool updated = false;
+  getCurrentUser() {
+    if (FirebaseAuth.instance.currentUser != null) {
+      DatabaseService()
+          .dataCollection
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .snapshots()
+          .listen((event) {
+        username = event.get('username');
+        email = event.get('email');
 
-    DatabaseService()
-        .dataCollection
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .snapshots()
-        .listen((event) {
-      if (mounted) {
-        setState(() {
-          username = event.get('username');
-          email = event.get('email');
-        });
-      }
-    });
+        setState(() {});
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     getCurrentUser();
-    //print(username);
     return SingleChildScrollView(
       child: Container(
         margin: MediaQuery.of(context).padding,
@@ -82,7 +84,7 @@ class _HomeTabState extends State<HomeTab> {
                             elevation: 5,
                             child: Container(
                               height:
-                                  MediaQuery.of(context).size.height / 100 * 25,
+                                  MediaQuery.of(context).size.height / 100 * 30,
                               width: MediaQuery.of(context).size.width /
                                   100 *
                                   93.5,
@@ -237,10 +239,15 @@ class _HomeTabState extends State<HomeTab> {
                         ),
                         Container(
                           child: IconButton(
-                            onPressed: () async {
-                              AuthenticationService().signOut();
-                              Future.delayed(Duration(milliseconds: 300))
-                                  .then((value) => Navigator.of(context).pop());
+                            onPressed: () {
+                              if (mounted) {
+                                FirebaseAuth.instance.signOut();
+                              }
+
+                              Future.delayed(Duration(milliseconds: 100)).then(
+                                  (value) => Navigator.of(context)
+                                    ..pushReplacement(MaterialPageRoute(
+                                        builder: (context) => LoginPage())));
                             },
                             icon: Icon(Icons.logout),
                           ),

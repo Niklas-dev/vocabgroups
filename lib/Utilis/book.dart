@@ -28,6 +28,8 @@ class Book {
       'bookname': bookname,
       'public': public,
       'index': index,
+      'leftColumnName': 'Left',
+      'rightColumnName': 'Right',
       'leftContent': <String>['Hallo', 'Bye'],
       'rightContent': <String>['Hello', 'Tschau'],
     });

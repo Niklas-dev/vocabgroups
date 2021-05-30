@@ -18,6 +18,8 @@ class _RegisterPageState extends State<RegisterPage> {
   String _email = "";
   String _username = "";
 
+  bool loggedInCheck = false;
+
   final auth = FirebaseAuth.instance;
 
   final TextEditingController email = TextEditingController();
@@ -267,11 +269,15 @@ class _RegisterPageState extends State<RegisterPage> {
         (user) {
           if (user == null) {
             print('User is currently signed out!');
+            loggedInCheck = false;
           } else {
-            print('User is signed in!');
-            print(auth.currentUser!.email);
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => HomePage()));
+            if (!loggedInCheck) {
+              loggedInCheck = true;
+              print(auth.currentUser!.email);
+
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => HomePage()));
+            }
           }
         },
       );

@@ -16,6 +16,8 @@ class _LoginPageState extends State<LoginPage> {
   String _password = "";
   String _email = "";
 
+  bool loggedInCheck = false;
+
   final auth = FirebaseAuth.instance;
 
   final TextEditingController email = TextEditingController();
@@ -23,11 +25,17 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    isLoggedIn();
+  }
+
+  @override
+  void dispose() {
+    MaterialPageRoute(builder: (context) => HomePage()).dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    isLoggedIn();
     return Scaffold(
       body: Container(
           decoration: BoxDecoration(
@@ -171,8 +179,6 @@ class _LoginPageState extends State<LoginPage> {
                           child: InkWell(
                             onTap: () async {
                               AuthenticationService().signIn(_email, _password);
-                              //email.clear();
-                              //password.clear();
                             },
                             child: Text(
                               "Login",
@@ -228,10 +234,15 @@ class _LoginPageState extends State<LoginPage> {
         (user) {
           if (user == null) {
             print('User is currently signed out!');
+            loggedInCheck = false;
           } else {
-            print(auth.currentUser!.email);
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => HomePage()));
+            if (!loggedInCheck) {
+              loggedInCheck = true;
+              print(auth.currentUser!.email);
+
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => HomePage()));
+            }
           }
         },
       );
