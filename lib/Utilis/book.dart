@@ -16,6 +16,7 @@ class Book {
     print(bookname);
     print(public);
     print(index);
+    print("Book");
   }
 
   addBook(String bookname, bool public, int index) {
