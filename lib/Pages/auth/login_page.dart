@@ -2,9 +2,9 @@ import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:vocalgroups/Authentication/authentication.dart';
 import 'package:vocalgroups/Pages/auth/register_page.dart';
 import 'package:vocalgroups/Pages/home_page.dart';
-import 'package:vocalgroups/authentication.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -20,10 +20,14 @@ class _LoginPageState extends State<LoginPage> {
 
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    isLoggedIn();
+  }
 
   @override
   Widget build(BuildContext context) {
-    isLoggedIn();
     return Scaffold(
       body: Container(
           decoration: BoxDecoration(
@@ -103,52 +107,53 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       )),
                   Padding(
-                      padding: EdgeInsets.all(5),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 0.0, sigmaY: 0.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: Colors.transparent.withOpacity(0.4),
-                          ),
-                          child: TextField(
-                            controller: password,
-                            onChanged: (value) {
-                              _password = value.trim();
-                            },
-                            obscureText: hidePassword,
-                            style: TextStyle(color: Colors.white),
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: MediaQuery.of(context).size.height /
-                                      100 *
-                                      2.5,
-                                  horizontal: 10.0),
-                              labelText: 'Password',
-                              labelStyle: TextStyle(color: Colors.white),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              suffixIcon: IconButton(
-                                  onPressed: () {
-                                    if (hidePassword) {
-                                      hidePassword = false;
-                                    } else {
-                                      hidePassword = true;
-                                    }
-                                    setState(() {});
-                                  },
-                                  icon: Icon(
-                                    hidePassword
-                                        ? FontAwesomeIcons.eyeSlash
-                                        : FontAwesomeIcons.eye,
-                                    color: Colors.white,
-                                  )),
-                              fillColor: Colors.transparent,
+                    padding: EdgeInsets.all(5),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 0.0, sigmaY: 0.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colors.transparent.withOpacity(0.4),
+                        ),
+                        child: TextField(
+                          controller: password,
+                          onChanged: (value) {
+                            _password = value.trim();
+                          },
+                          obscureText: hidePassword,
+                          style: TextStyle(color: Colors.white),
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: MediaQuery.of(context).size.height /
+                                    100 *
+                                    2.5,
+                                horizontal: 10.0),
+                            labelText: 'Password',
+                            labelStyle: TextStyle(color: Colors.white),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
                             ),
+                            suffixIcon: IconButton(
+                                onPressed: () {
+                                  if (hidePassword) {
+                                    hidePassword = false;
+                                  } else {
+                                    hidePassword = true;
+                                  }
+                                  setState(() {});
+                                },
+                                icon: Icon(
+                                  hidePassword
+                                      ? FontAwesomeIcons.eyeSlash
+                                      : FontAwesomeIcons.eye,
+                                  color: Colors.white,
+                                )),
+                            fillColor: Colors.transparent,
                           ),
                         ),
-                      )),
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: EdgeInsets.only(
                         top: MediaQuery.of(context).size.height / 100 * 10),
@@ -187,7 +192,7 @@ class _LoginPageState extends State<LoginPage> {
                         top: MediaQuery.of(context).size.height / 100 * 16),
                     child: InkWell(
                       onTap: () {
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => RegisterPage()));
                       },
                       child: Container(
@@ -219,18 +224,17 @@ class _LoginPageState extends State<LoginPage> {
 
   void isLoggedIn() async {
     if (mounted) {
-      setState(() {
-        auth.authStateChanges().listen((user) {
+      auth.authStateChanges().listen(
+        (user) {
           if (user == null) {
             print('User is currently signed out!');
           } else {
-            print('User is signed in!');
             print(auth.currentUser!.email);
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => HomePage()));
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => HomePage()));
           }
-        });
-      });
+        },
+      );
     }
   }
 }

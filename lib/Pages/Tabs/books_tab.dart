@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vocalgroups/Utilis/book.dart';
 
 class BooksTab extends StatefulWidget {
   @override
@@ -12,6 +13,12 @@ class _BooksTabState extends State<BooksTab> {
       margin: MediaQuery.of(context).padding,
       child: Container(
         color: Colors.yellow,
+        child: IconButton(
+          onPressed: () {
+            Book().addBook('English', false, 0);
+          },
+          icon: Icon(Icons.add),
+        ),
       ),
     );
   }

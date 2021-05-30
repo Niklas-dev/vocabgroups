@@ -2,8 +2,8 @@ import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:vocalgroups/Authentication/authentication.dart';
 import 'package:vocalgroups/Pages/home_page.dart';
-import 'package:vocalgroups/authentication.dart';
 
 import 'login_page.dart';
 
@@ -263,16 +263,18 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void isLoggedIn() async {
     if (mounted) {
-      setState(() {});
+      auth.authStateChanges().listen(
+        (user) {
+          if (user == null) {
+            print('User is currently signed out!');
+          } else {
+            print('User is signed in!');
+            print(auth.currentUser!.email);
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => HomePage()));
+          }
+        },
+      );
     }
-    auth.authStateChanges().listen((user) {
-      if (user == null) {
-        print('User is currently signed out!');
-      } else {
-        print('User is signed in!');
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => HomePage()));
-      }
-    });
   }
 }

@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:vocalgroups/Authentication/Database.dart';
 
 class AuthenticationService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -27,6 +28,8 @@ class AuthenticationService {
           .createUserWithEmailAndPassword(email: email, password: password);
       User user = userCredential.user!;
       user.updateProfile(displayName: username);
+      await DatabaseService(uid: user.uid)
+          .updateUserData(username, user.email!);
       return user;
     } on FirebaseAuthException catch (e) {
       print(e.message);
