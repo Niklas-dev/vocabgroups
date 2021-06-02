@@ -15,7 +15,7 @@ class _BooksTabState extends State<BooksTab> {
         color: Colors.yellow,
         child: IconButton(
           onPressed: () {
-            Book().addBook('English', false, 0);
+            Book().addBook('English1', false, 0);
           },
           icon: Icon(Icons.add),
         ),
