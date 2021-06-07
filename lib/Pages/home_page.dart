@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:vocalgroups/Authentication/Database.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vocalgroups/Utilis/keyboard_check.dart';
 import 'Tabs/book_tab.dart';
 import 'Tabs/books_tab.dart';
 import 'Tabs/groups_tab.dart';
 import 'Tabs/home_tab.dart';
 import 'Tabs/translator_tab.dart';
-import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -34,12 +33,23 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
+  bool? onTranslatorBool = true;
+  Future<bool> onTranslatorPage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    onTranslatorBool = true;
+    onTranslatorBool = prefs.getBool('onTanslator');
+    setState(() {});
+    return onTranslatorBool!;
+  }
+
   void inputData() {}
 
   @override
   Widget build(BuildContext context) {
+    onTranslatorPage();
     return Container(
       child: Scaffold(
+        resizeToAvoidBottomInset: onTranslatorBool,
         floatingActionButton: KeyboardVisibilityBuilder(
           builder: (context, child, isKeyboardVisible) {
             if (isKeyboardVisible && mounted) {

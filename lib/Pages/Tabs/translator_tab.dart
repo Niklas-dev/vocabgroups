@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:translator/translator.dart';
 
 class TranslatorTab extends StatefulWidget {
@@ -52,8 +53,14 @@ class _TranslatorTabState extends State<TranslatorTab> {
     super.initState();
   }
 
+  updateStatePage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('onTanslator', true);
+  }
+
   @override
   Widget build(BuildContext context) {
+    updateStatePage();
     return Container(
       margin: MediaQuery.of(context).padding,
       child: SingleChildScrollView(

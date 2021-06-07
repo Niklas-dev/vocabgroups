@@ -1,25 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:vocalgroups/Authentication/Database.dart';
 
 class Book {
   String? bookname;
   bool? public;
   int? index;
+  String? currentBook;
+  String? lastbook;
 
   Book({
     this.bookname,
     this.public,
     this.index,
+    this.currentBook,
+    this.lastbook,
   });
-
-  printData() {
-    print(bookname);
-    print(public);
-    print(index);
-    print("Book");
-  }
 
   addBook(String bookname, bool public, int index) {
     DatabaseService()
@@ -33,9 +29,18 @@ class Book {
       'index': index,
       'leftColumnName': 'Left',
       'rightColumnName': 'Right',
-      'leftContent': <String>['Hallo', 'Bye'],
-      'rightContent': <String>['Hello', 'Tschau'],
+      'leftContent': <String>['Use the add Button'],
+      'rightContent': <String>['to add more rows'],
     });
+  }
+
+  deleteBook(String bookname) {
+    DatabaseService()
+        .dataCollection
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('books')
+        .doc(bookname)
+        .delete();
   }
 
   Future<int> getBooksAmount() async {

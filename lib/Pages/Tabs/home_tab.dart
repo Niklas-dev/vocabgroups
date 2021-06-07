@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vocalgroups/Authentication/Database.dart';
-import 'package:vocalgroups/Authentication/authentication.dart';
 import 'package:vocalgroups/Pages/auth/login_page.dart';
 import 'package:vocalgroups/Utilis/book.dart';
 
@@ -36,6 +35,11 @@ class _HomeTabState extends State<HomeTab> {
         print(element.data());
       });
     });
+  }
+
+  updateStatePage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('onTanslator', false);
   }
 
   DocumentSnapshot? lastEvent;
@@ -77,6 +81,7 @@ class _HomeTabState extends State<HomeTab> {
 
   @override
   Widget build(BuildContext context) {
+    updateStatePage();
     getCurrentUserListen();
 
     return LayoutBuilder(builder: (context, constraints) {
@@ -252,7 +257,7 @@ class _HomeTabState extends State<HomeTab> {
                                                         .spaceAround,
                                                 children: [
                                                   Text(
-                                                    'Books ${booksamount}',
+                                                    'Books $booksamount',
                                                     style:
                                                         TextStyle(fontSize: 20),
                                                   ),
@@ -504,7 +509,7 @@ class _HomeTabState extends State<HomeTab> {
                                                         .spaceAround,
                                                 children: [
                                                   Text(
-                                                    'Books ${booksamount}',
+                                                    'Books $booksamount',
                                                     style:
                                                         TextStyle(fontSize: 20),
                                                   ),
