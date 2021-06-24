@@ -45,7 +45,7 @@ class _HomeTabState extends State<HomeTab> {
   DocumentSnapshot? lastEvent;
 
   bool updated = false;
-  int? booksamount = 0;
+  int booksamount = 0;
   getCurrentUserListen() async {
     if (mounted) {
       booksamount = await Book().getBooksAmount();
@@ -101,7 +101,6 @@ class _HomeTabState extends State<HomeTab> {
                           height: MediaQuery.of(context).size.height / 100 * 85,
                           width: MediaQuery.of(context).size.width / 100 * 98,
                           decoration: BoxDecoration(
-                              color: Color(0xffdbe2ef),
                               borderRadius: BorderRadius.circular(12)),
                         ),
                         Column(
@@ -119,7 +118,7 @@ class _HomeTabState extends State<HomeTab> {
                                       100 *
                                       93.5,
                                   decoration: BoxDecoration(
-                                      color: Color(0xfff9f7f7),
+                                      color: Colors.white,
                                       borderRadius: BorderRadius.circular(12)),
                                   child: Padding(
                                     padding: EdgeInsets.only(
@@ -292,12 +291,16 @@ class _HomeTabState extends State<HomeTab> {
                                 child: Container(
                                   height: MediaQuery.of(context).size.height /
                                       100 *
-                                      25,
+                                      35,
                                   width: MediaQuery.of(context).size.width /
                                       100 *
                                       93.5,
                                   decoration: BoxDecoration(
-                                      color: Color(0xfff9f7f7),
+                                      image: DecorationImage(
+                                          fit: BoxFit.fitHeight,
+                                          image:
+                                              AssetImage('assets/empty.png')),
+                                      color: Colors.white,
                                       borderRadius: BorderRadius.circular(12)),
                                   child: Padding(
                                     padding: EdgeInsets.only(
@@ -355,7 +358,6 @@ class _HomeTabState extends State<HomeTab> {
                           height: MediaQuery.of(context).size.height / 100 * 84,
                           width: MediaQuery.of(context).size.width / 100 * 95,
                           decoration: BoxDecoration(
-                              color: Color(0xffdbe2ef),
                               borderRadius: BorderRadius.circular(12)),
                         ),
                         Column(
@@ -373,7 +375,7 @@ class _HomeTabState extends State<HomeTab> {
                                       100 *
                                       93.5,
                                   decoration: BoxDecoration(
-                                      color: Color(0xfff9f7f7),
+                                      color: Colors.white,
                                       borderRadius: BorderRadius.circular(12)),
                                   child: Padding(
                                     padding: EdgeInsets.only(
@@ -548,7 +550,11 @@ class _HomeTabState extends State<HomeTab> {
                                       100 *
                                       93.5,
                                   decoration: BoxDecoration(
-                                      color: Color(0xfff9f7f7),
+                                      image: DecorationImage(
+                                          fit: BoxFit.fitHeight,
+                                          image:
+                                              AssetImage('assets/empty.png')),
+                                      color: Colors.white,
                                       borderRadius: BorderRadius.circular(12)),
                                   child: Padding(
                                     padding: EdgeInsets.only(
@@ -640,7 +646,7 @@ class _HomeTabState extends State<HomeTab> {
                                 MediaQuery.of(context).size.height / 100 * 6,
                             width: MediaQuery.of(context).size.width / 100 * 12,
                             decoration: BoxDecoration(
-                                color: Colors.red,
+                                color: Colors.grey[200],
                                 borderRadius: BorderRadius.circular(8)),
                             child: Center(
                               child: Icon(Icons.clear,
@@ -665,7 +671,7 @@ class _HomeTabState extends State<HomeTab> {
                                 MediaQuery.of(context).size.height / 100 * 6,
                             width: MediaQuery.of(context).size.width / 100 * 12,
                             decoration: BoxDecoration(
-                                color: Colors.green,
+                                color: Colors.blueAccent,
                                 borderRadius: BorderRadius.circular(8)),
                             child: Center(
                               child: Icon(Icons.check,
@@ -729,7 +735,7 @@ class _HomeTabState extends State<HomeTab> {
                                 MediaQuery.of(context).size.height / 100 * 6,
                             width: MediaQuery.of(context).size.width / 100 * 12,
                             decoration: BoxDecoration(
-                                color: Colors.red,
+                                color: Colors.grey[200],
                                 borderRadius: BorderRadius.circular(8)),
                             child: Center(
                               child: Icon(Icons.clear,
@@ -754,7 +760,7 @@ class _HomeTabState extends State<HomeTab> {
                                 MediaQuery.of(context).size.height / 100 * 6,
                             width: MediaQuery.of(context).size.width / 100 * 12,
                             decoration: BoxDecoration(
-                                color: Colors.green,
+                                color: Colors.blueAccent,
                                 borderRadius: BorderRadius.circular(8)),
                             child: Center(
                               child: Icon(Icons.check,

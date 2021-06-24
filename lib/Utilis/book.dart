@@ -43,7 +43,7 @@ class Book {
         .delete();
   }
 
-  Future<int> getBooksAmount() async {
+  getBooksAmount() async {
     int amount = 0;
     QuerySnapshot snapshot = await DatabaseService()
         .dataCollection

@@ -34,12 +34,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   bool? onTranslatorBool = true;
-  Future<bool> onTranslatorPage() async {
+  onTranslatorPage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     onTranslatorBool = true;
     onTranslatorBool = prefs.getBool('onTanslator');
     setState(() {});
-    return onTranslatorBool!;
   }
 
   void inputData() {}
@@ -49,6 +48,7 @@ class _HomePageState extends State<HomePage> {
     onTranslatorPage();
     return Container(
       child: Scaffold(
+        backgroundColor: Colors.white,
         resizeToAvoidBottomInset: onTranslatorBool,
         floatingActionButton: KeyboardVisibilityBuilder(
           builder: (context, child, isKeyboardVisible) {
@@ -115,7 +115,6 @@ class _HomePageState extends State<HomePage> {
             onTabChange: (index) {
               currentIndex = index;
               setState(() {});
-              debugPrint("$index");
             },
           ),
         ),
@@ -123,14 +122,4 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-}
-
-class UserData {
-  String? username = '';
-  String? email = '';
-
-  UserData({
-    this.username,
-    this.email,
-  });
 }

@@ -76,7 +76,6 @@ class _BookTabState extends State<BookTab> {
                                       100 *
                                       95,
                                   decoration: BoxDecoration(
-                                      color: Color(0xffdbe2ef),
                                       borderRadius: BorderRadius.circular(12)),
                                 ),
                                 Column(
@@ -135,9 +134,9 @@ class _BookTabState extends State<BookTab> {
                                               padding: EdgeInsets.all(4),
                                               child: Container(
                                                 decoration: BoxDecoration(
-                                                  color: Colors.white,
+                                                  color: Colors.grey[200],
                                                   borderRadius:
-                                                      BorderRadius.circular(8),
+                                                      BorderRadius.circular(4),
                                                 ),
                                                 child: Padding(
                                                   padding:
@@ -236,7 +235,7 @@ class _BookTabState extends State<BookTab> {
                                                     .size
                                                     .width /
                                                 100 *
-                                                28,
+                                                24,
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(8),
@@ -256,85 +255,112 @@ class _BookTabState extends State<BookTab> {
                                               icon: Icon(Icons.remove),
                                             ),
                                           ),
-                                          StreamBuilder<QuerySnapshot>(
-                                            stream: DatabaseService()
-                                                .dataCollection
-                                                .doc(FirebaseAuth
-                                                    .instance.currentUser!.uid)
-                                                .collection('books')
-                                                .snapshots(),
-                                            builder: (context,
-                                                AsyncSnapshot snapshot) {
-                                              if (!snapshot.hasData)
-                                                return CircularProgressIndicator();
-                                              else {
-                                                List<DropdownMenuItem>
-                                                    bookItems = [];
-                                                for (int i = 0;
-                                                    i <
-                                                        snapshot
-                                                            .data!.docs.length;
-                                                    i++) {
-                                                  DocumentSnapshot snap =
-                                                      snapshot.data!.docs[i];
-                                                  bookItems.add(
-                                                    DropdownMenuItem(
-                                                      child: Container(
-                                                        width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width /
-                                                            100 *
-                                                            25,
-                                                        child: Text(
-                                                          snap.id,
-                                                          style: TextStyle(
-                                                              fontSize: 20,
-                                                              color:
-                                                                  Colors.black),
-                                                        ),
-                                                      ),
-                                                      value: "${snap.id}",
-                                                    ),
-                                                  );
-                                                }
-                                                return Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: <Widget>[
-                                                    Icon(Icons.bookmarks,
-                                                        size: 20.0,
-                                                        color:
-                                                            Color(0xff112d4e)),
-                                                    DropdownButton<dynamic>(
-                                                      isExpanded: false,
-                                                      items: bookItems,
-                                                      onChanged: (bookValue) {
-                                                        setState(() {
-                                                          currentBookName =
-                                                              bookValue;
-                                                        });
-                                                      },
-                                                      value: currentBookName,
-                                                      elevation: 5,
-                                                      hint: new Text(
-                                                        "Choose Book",
-                                                        style: TextStyle(
-                                                            color: Color(
-                                                                0xff112d4e)),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                );
-                                              }
-                                            },
+                                          Padding(
+                                            padding: const EdgeInsets.all(2.0),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: Color(0xffdbe2ef),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          12)),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(2.0),
+                                                child: StreamBuilder<
+                                                    QuerySnapshot>(
+                                                  stream: DatabaseService()
+                                                      .dataCollection
+                                                      .doc(FirebaseAuth.instance
+                                                          .currentUser!.uid)
+                                                      .collection('books')
+                                                      .snapshots(),
+                                                  builder: (context,
+                                                      AsyncSnapshot snapshot) {
+                                                    if (!snapshot.hasData)
+                                                      return CircularProgressIndicator();
+                                                    else {
+                                                      List<DropdownMenuItem>
+                                                          bookItems = [];
+                                                      for (int i = 0;
+                                                          i <
+                                                              snapshot.data!
+                                                                  .docs.length;
+                                                          i++) {
+                                                        DocumentSnapshot snap =
+                                                            snapshot
+                                                                .data!.docs[i];
+                                                        bookItems.add(
+                                                          DropdownMenuItem(
+                                                            child: Container(
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width /
+                                                                  100 *
+                                                                  25,
+                                                              child: Text(
+                                                                snap.id,
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        20,
+                                                                    color: Colors
+                                                                        .black),
+                                                              ),
+                                                            ),
+                                                            value: "${snap.id}",
+                                                          ),
+                                                        );
+                                                      }
+                                                      return Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: <Widget>[
+                                                          Icon(Icons.bookmarks,
+                                                              size: 20.0,
+                                                              color: Color(
+                                                                  0xff112d4e)),
+                                                          DropdownButtonHideUnderline(
+                                                            child:
+                                                                DropdownButton<
+                                                                    dynamic>(
+                                                              isExpanded: false,
+                                                              dropdownColor:
+                                                                  Color(
+                                                                      0xffdbe2ef),
+                                                              items: bookItems,
+                                                              onChanged:
+                                                                  (bookValue) {
+                                                                setState(() {
+                                                                  currentBookName =
+                                                                      bookValue;
+                                                                });
+                                                              },
+                                                              value:
+                                                                  currentBookName,
+                                                              elevation: 8,
+                                                              hint: new Text(
+                                                                "Choose Book",
+                                                                style: TextStyle(
+                                                                    color: Color(
+                                                                        0xff112d4e)),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    }
+                                                  },
+                                                ),
+                                              ),
+                                            ),
                                           ),
                                           Container(
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width /
                                                 100 *
-                                                28,
+                                                24,
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(8),
@@ -381,7 +407,6 @@ class _BookTabState extends State<BookTab> {
                                       100 *
                                       95,
                                   decoration: BoxDecoration(
-                                      color: Color(0xffdbe2ef),
                                       borderRadius: BorderRadius.circular(12)),
                                 ),
                                 Column(
@@ -440,7 +465,7 @@ class _BookTabState extends State<BookTab> {
                                               padding: EdgeInsets.all(4),
                                               child: Container(
                                                 decoration: BoxDecoration(
-                                                  color: Colors.white,
+                                                  color: Colors.grey[200],
                                                   borderRadius:
                                                       BorderRadius.circular(8),
                                                 ),
@@ -546,7 +571,7 @@ class _BookTabState extends State<BookTab> {
                                                       .size
                                                       .width /
                                                   100 *
-                                                  25,
+                                                  22,
                                               decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(8),
@@ -566,87 +591,124 @@ class _BookTabState extends State<BookTab> {
                                                 icon: Icon(Icons.remove),
                                               ),
                                             ),
-                                            StreamBuilder<QuerySnapshot>(
-                                              stream: DatabaseService()
-                                                  .dataCollection
-                                                  .doc(FirebaseAuth.instance
-                                                      .currentUser!.uid)
-                                                  .collection('books')
-                                                  .snapshots(),
-                                              builder: (context,
-                                                  AsyncSnapshot snapshot) {
-                                                if (!snapshot.hasData)
-                                                  return CircularProgressIndicator();
-                                                else {
-                                                  List<DropdownMenuItem>
-                                                      bookItems = [];
-                                                  for (int i = 0;
-                                                      i <
-                                                          snapshot.data!.docs
-                                                              .length;
-                                                      i++) {
-                                                    DocumentSnapshot snap =
-                                                        snapshot.data!.docs[i];
-                                                    bookItems.add(
-                                                      DropdownMenuItem(
-                                                        child: Container(
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width /
-                                                              100 *
-                                                              25,
-                                                          child: Text(
-                                                            snap.id,
-                                                            style: TextStyle(
-                                                                fontSize: 15,
-                                                                color: Colors
-                                                                    .black),
-                                                          ),
-                                                        ),
-                                                        value: "${snap.id}",
-                                                      ),
-                                                    );
-                                                  }
-                                                  return Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: <Widget>[
-                                                      Icon(Icons.bookmarks,
-                                                          size: 15.0,
-                                                          color: Color(
-                                                              0xff112d4e)),
-                                                      DropdownButton<dynamic>(
-                                                        isExpanded: false,
-                                                        items: bookItems,
-                                                        onChanged: (bookValue) {
-                                                          setState(() {
-                                                            currentBookName =
-                                                                bookValue;
-                                                          });
-                                                        },
-                                                        value: currentBookName,
-                                                        elevation: 5,
-                                                        underline: null,
-                                                        hint: new Text(
-                                                          "Choose Book",
-                                                          style: TextStyle(
-                                                              color: Color(
-                                                                  0xff112d4e)),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  );
-                                                }
-                                              },
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(2.0),
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    color: Color(0xffdbe2ef),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8)),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(2.0),
+                                                  child: StreamBuilder<
+                                                      QuerySnapshot>(
+                                                    stream: DatabaseService()
+                                                        .dataCollection
+                                                        .doc(FirebaseAuth
+                                                            .instance
+                                                            .currentUser!
+                                                            .uid)
+                                                        .collection('books')
+                                                        .snapshots(),
+                                                    builder: (context,
+                                                        AsyncSnapshot
+                                                            snapshot) {
+                                                      if (!snapshot.hasData)
+                                                        return CircularProgressIndicator();
+                                                      else {
+                                                        List<DropdownMenuItem>
+                                                            bookItems = [];
+                                                        for (int i = 0;
+                                                            i <
+                                                                snapshot
+                                                                    .data!
+                                                                    .docs
+                                                                    .length;
+                                                            i++) {
+                                                          DocumentSnapshot
+                                                              snap = snapshot
+                                                                  .data!
+                                                                  .docs[i];
+                                                          bookItems.add(
+                                                            DropdownMenuItem(
+                                                              child: Container(
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width /
+                                                                    100 *
+                                                                    25,
+                                                                child: Text(
+                                                                  snap.id,
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          15,
+                                                                      color: Colors
+                                                                          .black),
+                                                                ),
+                                                              ),
+                                                              value:
+                                                                  "${snap.id}",
+                                                            ),
+                                                          );
+                                                        }
+                                                        return Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: <Widget>[
+                                                            Icon(
+                                                                Icons.bookmarks,
+                                                                size: 15.0,
+                                                                color: Color(
+                                                                    0xff112d4e)),
+                                                            DropdownButtonHideUnderline(
+                                                              child:
+                                                                  DropdownButton<
+                                                                      dynamic>(
+                                                                isExpanded:
+                                                                    false,
+                                                                dropdownColor:
+                                                                    Color(
+                                                                        0xffdbe2ef),
+                                                                items:
+                                                                    bookItems,
+                                                                onChanged:
+                                                                    (bookValue) {
+                                                                  setState(() {
+                                                                    currentBookName =
+                                                                        bookValue;
+                                                                  });
+                                                                },
+                                                                value:
+                                                                    currentBookName,
+                                                                elevation: 5,
+                                                                underline: null,
+                                                                hint: new Text(
+                                                                  "Choose Book",
+                                                                  style: TextStyle(
+                                                                      color: Color(
+                                                                          0xff112d4e)),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        );
+                                                      }
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
                                             ),
                                             Container(
                                               width: MediaQuery.of(context)
                                                       .size
                                                       .width /
                                                   100 *
-                                                  25,
+                                                  22,
                                               decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(8),
@@ -692,7 +754,7 @@ class _BookTabState extends State<BookTab> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(20.0))),
             content: Container(
-              height: MediaQuery.of(context).size.height / 100 * 22,
+              height: MediaQuery.of(context).size.height / 100 * 30,
               width: MediaQuery.of(context).size.width / 100 * 100,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -786,7 +848,7 @@ class _BookTabState extends State<BookTab> {
                         padding: EdgeInsets.all(5),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.red,
+                            color: Colors.grey[200],
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: IconButton(
@@ -801,7 +863,7 @@ class _BookTabState extends State<BookTab> {
                         padding: EdgeInsets.all(5),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.green,
+                            color: Colors.blueAccent,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: IconButton(
@@ -936,7 +998,7 @@ class _BookTabState extends State<BookTab> {
                         padding: EdgeInsets.all(5),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.red,
+                            color: Colors.grey[200],
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: IconButton(
@@ -951,7 +1013,7 @@ class _BookTabState extends State<BookTab> {
                         padding: EdgeInsets.all(5),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.green,
+                            color: Colors.blueAccent,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: IconButton(

@@ -89,6 +89,7 @@ class _TranslatorTabState extends State<TranslatorTab> {
                 right: 5,
               ),
               child: Material(
+                color: Colors.white,
                 elevation: 0,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -138,6 +139,7 @@ class _TranslatorTabState extends State<TranslatorTab> {
                     Stack(
                       children: [
                         Container(
+                          color: Colors.white,
                           height: 100,
                           child: TextField(
                             controller: inputLang,
@@ -202,6 +204,7 @@ class _TranslatorTabState extends State<TranslatorTab> {
                     Stack(
                       children: [
                         Container(
+                          color: Colors.white,
                           height: 100,
                           child: TextField(
                             controller: outputLang,
@@ -246,6 +249,16 @@ class _TranslatorTabState extends State<TranslatorTab> {
                           ),
                         ),
                       ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height / 100 * 32,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          image: DecorationImage(
+                            fit: BoxFit.fitHeight,
+                            image: AssetImage('assets/translate.png'),
+                          )),
                     )
                   ],
                 ),

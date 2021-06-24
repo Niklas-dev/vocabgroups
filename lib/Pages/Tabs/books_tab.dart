@@ -59,7 +59,6 @@ class _BooksTabState extends State<BooksTab> {
                                       100 *
                                       95,
                                   decoration: BoxDecoration(
-                                      color: Color(0xffdbe2ef),
                                       borderRadius: BorderRadius.circular(12)),
                                 ),
                                 Padding(
@@ -82,7 +81,7 @@ class _BooksTabState extends State<BooksTab> {
                                         height:
                                             MediaQuery.of(context).size.height /
                                                 100 *
-                                                15,
+                                                16,
                                         width:
                                             MediaQuery.of(context).size.width /
                                                 100 *
@@ -110,7 +109,12 @@ class _BooksTabState extends State<BooksTab> {
                                                             12),
                                                     child: Container(
                                                       height: 15,
-                                                      width: 90,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              100 *
+                                                              25,
                                                       decoration: BoxDecoration(
                                                         borderRadius:
                                                             BorderRadius
@@ -149,7 +153,12 @@ class _BooksTabState extends State<BooksTab> {
                                                       BorderRadius.circular(12),
                                                   child: Container(
                                                     height: 15,
-                                                    width: 90,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width /
+                                                            100 *
+                                                            25,
                                                     decoration: BoxDecoration(
                                                       borderRadius:
                                                           BorderRadius.circular(
@@ -388,7 +397,6 @@ class _BooksTabState extends State<BooksTab> {
                                       100 *
                                       95,
                                   decoration: BoxDecoration(
-                                      color: Color(0xffdbe2ef),
                                       borderRadius: BorderRadius.circular(12)),
                                 ),
                                 Padding(
@@ -746,7 +754,7 @@ class _BooksTabState extends State<BooksTab> {
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
           content: Container(
-            height: MediaQuery.of(context).size.height / 100 * 36,
+            height: MediaQuery.of(context).size.height / 100 * 40,
             width: MediaQuery.of(context).size.width / 100 * 100,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -882,7 +890,7 @@ class _BooksTabState extends State<BooksTab> {
                         },
                         child: Container(
                           decoration: BoxDecoration(
-                              color: Colors.red,
+                              color: Colors.grey[200],
                               borderRadius: BorderRadius.circular(12)),
                           height: MediaQuery.of(context).size.height / 100 * 6,
                           width: MediaQuery.of(context).size.width / 100 * 30,
@@ -912,7 +920,7 @@ class _BooksTabState extends State<BooksTab> {
                         },
                         child: Container(
                           decoration: BoxDecoration(
-                              color: Colors.green,
+                              color: Colors.blueAccent,
                               borderRadius: BorderRadius.circular(12)),
                           height: MediaQuery.of(context).size.height / 100 * 6,
                           width: MediaQuery.of(context).size.width / 100 * 30,
@@ -1085,7 +1093,7 @@ class _BooksTabState extends State<BooksTab> {
                           },
                           child: Container(
                             decoration: BoxDecoration(
-                                color: Colors.red,
+                                color: Colors.grey[200],
                                 borderRadius: BorderRadius.circular(8)),
                             height:
                                 MediaQuery.of(context).size.height / 100 * 6,
@@ -1112,7 +1120,7 @@ class _BooksTabState extends State<BooksTab> {
                           },
                           child: Container(
                             decoration: BoxDecoration(
-                                color: Colors.green,
+                                color: Colors.blueAccent,
                                 borderRadius: BorderRadius.circular(8)),
                             height:
                                 MediaQuery.of(context).size.height / 100 * 6,
