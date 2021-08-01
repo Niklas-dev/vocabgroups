@@ -68,16 +68,27 @@ class _TranslatorTabState extends State<TranslatorTab> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height / 100 * 2.5),
+              padding: const EdgeInsets.all(6),
               child: Container(
-                alignment: Alignment.center,
-                child: Text(
-                  "Translator",
-                  style: TextStyle(
-                    color: Color(0xff112d4e),
-                    fontSize: 35,
-                    fontWeight: FontWeight.w700,
+                width: MediaQuery.of(context).size.width / 100 * 95,
+                height: MediaQuery.of(context).size.height / 100 * 8,
+                decoration: BoxDecoration(
+                  color: const Color(0xff3F72AF),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.all(6),
+                    child: Text(
+                      'Translator',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: 2,
+                      ),
+                    ),
                   ),
                 ),
               ),

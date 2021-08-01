@@ -42,249 +42,76 @@ class _BooksTabState extends State<BooksTab> {
               builder: (context, constraints) {
                 if (constraints.maxHeight >= 600) {
                   return Container(
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(top: 5),
-                            child: Stack(
-                              alignment: Alignment.topCenter,
-                              children: [
-                                Container(
-                                  height: MediaQuery.of(context).size.height /
-                                      100 *
-                                      84,
-                                  width: MediaQuery.of(context).size.width /
-                                      100 *
-                                      95,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12)),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(6),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width /
+                                    100 *
+                                    95,
+                                height: MediaQuery.of(context).size.height /
+                                    100 *
+                                    7,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xff3F72AF),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Text(
-                                            "Your books",
-                                            style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                        ),
+                                child: Container(
+                                  alignment: Alignment.centerLeft,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(6),
+                                    child: Text(
+                                      'Books',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.w500,
+                                        letterSpacing: 2,
                                       ),
-                                      Container(
-                                        height:
-                                            MediaQuery.of(context).size.height /
-                                                100 *
-                                                16,
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                100 *
-                                                94.6,
-                                        child: ListView.builder(
-                                          scrollDirection: Axis.horizontal,
-                                          shrinkWrap: true,
-                                          padding:
-                                              EdgeInsets.symmetric(vertical: 0),
-                                          itemCount:
-                                              snapshot.data.docs.length + 1,
-                                          itemBuilder: (context, index) {
-                                            final list = snapshot.data.docs;
-                                            if (index == 0) {
-                                              return Padding(
-                                                padding: EdgeInsets.all(8),
-                                                child: InkWell(
-                                                  onTap: () {
-                                                    showAddBook(context);
-                                                  },
-                                                  child: Material(
-                                                    elevation: 5,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12),
-                                                    child: Container(
-                                                      height: 15,
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              100 *
-                                                              25,
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(12),
-                                                        color:
-                                                            Color(0xfff9f7f7),
-                                                      ),
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Icon(Icons.add),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              );
-                                            }
-                                            return Padding(
-                                              padding: EdgeInsets.all(8),
-                                              child: InkWell(
-                                                onTap: () async {
-                                                  SharedPreferences prefs =
-                                                      await SharedPreferences
-                                                          .getInstance();
-                                                  prefs.setString(
-                                                      'currentbook',
-                                                      list[index - 1]
-                                                          ['bookname']);
-                                                },
-                                                child: Material(
-                                                  elevation: 5,
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                  child: Container(
-                                                    height: 15,
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width /
-                                                            100 *
-                                                            25,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              12),
-                                                      color: Color(0xfff9f7f7),
-                                                    ),
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  left: 2,
-                                                                  right: 2,
-                                                                  top: 3),
-                                                          child: Text(
-                                                            list[index - 1]
-                                                                ['bookname'],
-                                                            style: TextStyle(
-                                                                fontSize: 16,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400),
-                                                          ),
-                                                        ),
-                                                        Spacer(),
-                                                        Container(
-                                                          height: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .height /
-                                                              100 *
-                                                              5,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: Color(
-                                                                0xff3f72af),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .only(
-                                                              bottomLeft: Radius
-                                                                  .circular(12),
-                                                              bottomRight:
-                                                                  Radius
-                                                                      .circular(
-                                                                          12),
-                                                            ),
-                                                          ),
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .all(2),
-                                                                child: InkWell(
-                                                                  onTap: () {
-                                                                    Book().deleteBook(list[
-                                                                            index -
-                                                                                1]
-                                                                        [
-                                                                        'bookname']);
-                                                                  },
-                                                                  child: Icon(
-                                                                    Icons
-                                                                        .delete,
-                                                                    size: 22,
-                                                                    color: Color(
-                                                                        0xff112d4e),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .all(2),
-                                                                child: InkWell(
-                                                                  onTap: () {},
-                                                                  child: Icon(
-                                                                    Icons.edit,
-                                                                    size: 22,
-                                                                    color: Color(
-                                                                        0xff112d4e),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            );
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16.0),
+                              child: Container(
+                                height: MediaQuery.of(context).size.height /
+                                    100 *
+                                    20,
+                                width: MediaQuery.of(context).size.width /
+                                    100 *
+                                    94.6,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  shrinkWrap: true,
+                                  padding: EdgeInsets.symmetric(vertical: 0),
+                                  itemCount: snapshot.data.docs.length + 1,
+                                  itemBuilder: (context, index) {
+                                    final list = snapshot.data.docs;
+                                    if (index == 0) {
+                                      return Padding(
+                                        padding: EdgeInsets.all(8),
+                                        child: InkWell(
+                                          onTap: () {
+                                            showAddBook(context);
                                           },
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Text(
-                                            "Last book",
-                                            style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.topLeft,
-                                        child: Padding(
-                                          padding: EdgeInsets.all(8),
                                           child: Material(
                                             elevation: 5,
                                             borderRadius:
                                                 BorderRadius.circular(12),
                                             child: Container(
-                                              height: 200,
-                                              width: 150,
+                                              height: 15,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  100 *
+                                                  30,
                                               decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(12),
@@ -292,90 +119,151 @@ class _BooksTabState extends State<BooksTab> {
                                               ),
                                               child: Column(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.start,
+                                                    MainAxisAlignment.center,
                                                 children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 2,
-                                                            right: 2,
-                                                            top: 50),
-                                                    child: Text(
-                                                      "Bookname",
-                                                      style: TextStyle(
-                                                          fontSize: 25,
-                                                          fontWeight:
-                                                              FontWeight.w500),
-                                                    ),
-                                                  ),
-                                                  Spacer(),
-                                                  Container(
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height /
-                                                            100 *
-                                                            5,
-                                                    decoration: BoxDecoration(
-                                                      color: Color(0xff3f72af),
-                                                      borderRadius:
-                                                          BorderRadius.only(
-                                                        bottomLeft:
-                                                            Radius.circular(12),
-                                                        bottomRight:
-                                                            Radius.circular(12),
-                                                      ),
-                                                    ),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(2),
-                                                          child: InkWell(
-                                                            onTap: () {},
-                                                            child: Icon(
-                                                              Icons.delete,
-                                                              size: 22,
-                                                              color: Color(
-                                                                  0xff112d4e),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(2),
-                                                          child: InkWell(
-                                                            onTap: () {},
-                                                            child: Icon(
-                                                              Icons.edit,
-                                                              size: 22,
-                                                              color: Color(
-                                                                  0xff112d4e),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
+                                                  Icon(Icons.add),
                                                 ],
                                               ),
                                             ),
                                           ),
                                         ),
+                                      );
+                                    }
+                                    return Padding(
+                                      padding: EdgeInsets.all(8),
+                                      child: InkWell(
+                                        onTap: () async {
+                                          SharedPreferences prefs =
+                                              await SharedPreferences
+                                                  .getInstance();
+                                          prefs.setString('currentbook',
+                                              list[index - 1]['bookname']);
+                                        },
+                                        child: Material(
+                                          elevation: 5,
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          child: Container(
+                                            height: 15,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                100 *
+                                                30,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              color: Color(0xfff9f7f7),
+                                            ),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 2,
+                                                          right: 2,
+                                                          top: 40),
+                                                  child: Wrap(
+                                                    children: [
+                                                      Text(
+                                                        list[index - 1]
+                                                            ['bookname'],
+                                                        style: TextStyle(
+                                                            fontSize: 20,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Spacer(),
+                                                Container(
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                      100 *
+                                                      5,
+                                                  decoration: BoxDecoration(
+                                                    color: Color(0xff3f72af),
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                      bottomLeft:
+                                                          Radius.circular(12),
+                                                      bottomRight:
+                                                          Radius.circular(12),
+                                                    ),
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(2),
+                                                        child: InkWell(
+                                                          onTap: () {
+                                                            Book().deleteBook(
+                                                                list[index - 1][
+                                                                    'bookname']);
+                                                          },
+                                                          child: Icon(
+                                                            Icons.delete,
+                                                            size: 22,
+                                                            color: Color(
+                                                                0xff112d4e),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(2),
+                                                        child: InkWell(
+                                                          onTap: () {},
+                                                          child: Icon(
+                                                            Icons.edit,
+                                                            size: 22,
+                                                            color: Color(
+                                                                0xff112d4e),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                    ],
-                                  ),
+                                    );
+                                  },
                                 ),
-                              ],
+                              ),
                             ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            top: 100.0,
                           ),
-                        ],
-                      ),
+                          child: Container(
+                            height: 300,
+                            width: 400,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: AssetImage('assets/book_lover.png')),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12)),
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 } else {
@@ -385,249 +273,102 @@ class _BooksTabState extends State<BooksTab> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(top: 5),
-                            child: Stack(
-                              alignment: Alignment.topCenter,
+                            padding: const EdgeInsets.all(6),
+                            child: Container(
+                              width:
+                                  MediaQuery.of(context).size.width / 100 * 95,
+                              height:
+                                  MediaQuery.of(context).size.height / 100 * 8,
+                              decoration: BoxDecoration(
+                                color: const Color(0xff3F72AF),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Container(
+                                alignment: Alignment.centerLeft,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(6),
+                                  child: Text(
+                                    'Books',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: 2,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Column(
                               children: [
                                 Container(
                                   height: MediaQuery.of(context).size.height /
                                       100 *
-                                      84,
+                                      22,
                                   width: MediaQuery.of(context).size.width /
                                       100 *
-                                      95,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12)),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Column(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 6),
-                                        child: Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Text(
-                                            "Your books",
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        height:
-                                            MediaQuery.of(context).size.height /
-                                                100 *
-                                                22,
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                100 *
-                                                94.6,
-                                        child: ListView.builder(
-                                          scrollDirection: Axis.horizontal,
-                                          shrinkWrap: true,
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 10),
-                                          itemCount:
-                                              snapshot.data.docs.length + 1,
-                                          itemBuilder: (context, index) {
-                                            final list = snapshot.data.docs;
-                                            if (index == 0) {
-                                              return Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: 4, right: 4),
-                                                child: InkWell(
-                                                  onTap: () {
-                                                    showAddBookSmall(context);
-                                                  },
-                                                  child: Material(
-                                                    elevation: 5,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12),
-                                                    child: Container(
-                                                      height:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .height /
-                                                              100 *
-                                                              50,
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              100 *
-                                                              22,
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(12),
-                                                        color:
-                                                            Color(0xfff9f7f7),
-                                                      ),
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Icon(Icons.add),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              );
-                                            }
-                                            return Padding(
-                                              padding: EdgeInsets.only(
-                                                  left: 4, right: 4),
-                                              child: InkWell(
-                                                onTap: () async {
-                                                  SharedPreferences prefs =
-                                                      await SharedPreferences
-                                                          .getInstance();
-                                                  prefs.setString(
-                                                      'currentbook',
-                                                      list[index - 1]
-                                                          ['bookname']);
-                                                },
-                                                child: Material(
-                                                  elevation: 5,
+                                      94.6,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    shrinkWrap: true,
+                                    padding: EdgeInsets.symmetric(vertical: 10),
+                                    itemCount: snapshot.data.docs.length + 1,
+                                    itemBuilder: (context, index) {
+                                      final list = snapshot.data.docs;
+                                      if (index == 0) {
+                                        return Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 4, right: 4),
+                                          child: InkWell(
+                                            onTap: () {
+                                              showAddBookSmall(context);
+                                            },
+                                            child: Material(
+                                              elevation: 5,
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              child: Container(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height /
+                                                    100 *
+                                                    50,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    100 *
+                                                    28,
+                                                decoration: BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.circular(12),
-                                                  child: Container(
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height /
-                                                            100 *
-                                                            50,
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width /
-                                                            100 *
-                                                            22,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              12),
-                                                      color: Color(0xfff9f7f7),
-                                                    ),
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  left: 2,
-                                                                  right: 2,
-                                                                  top: 3),
-                                                          child: Text(
-                                                            list[index - 1]
-                                                                ['bookname'],
-                                                            style: TextStyle(
-                                                                fontSize: 12,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400),
-                                                          ),
-                                                        ),
-                                                        Spacer(),
-                                                        Container(
-                                                          height: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .height /
-                                                              100 *
-                                                              5,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: Color(
-                                                                0xff3f72af),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .only(
-                                                              bottomLeft: Radius
-                                                                  .circular(12),
-                                                              bottomRight:
-                                                                  Radius
-                                                                      .circular(
-                                                                          12),
-                                                            ),
-                                                          ),
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .all(2),
-                                                                child: InkWell(
-                                                                  onTap: () {
-                                                                    Book().deleteBook(list[
-                                                                            index -
-                                                                                1]
-                                                                        [
-                                                                        'bookname']);
-                                                                  },
-                                                                  child: Icon(
-                                                                    Icons
-                                                                        .delete,
-                                                                    size: 18,
-                                                                    color: Color(
-                                                                        0xff112d4e),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .all(2),
-                                                                child: InkWell(
-                                                                  onTap: () {},
-                                                                  child: Icon(
-                                                                    Icons.edit,
-                                                                    size: 18,
-                                                                    color: Color(
-                                                                        0xff112d4e),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
+                                                  color: Color(0xfff9f7f7),
+                                                ),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Icon(Icons.add),
+                                                  ],
                                                 ),
                                               ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(5.0),
-                                        child: Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Text(
-                                            "Last book",
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w500),
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.topLeft,
-                                        child: Padding(
-                                          padding: EdgeInsets.all(8),
+                                        );
+                                      }
+                                      return Padding(
+                                        padding:
+                                            EdgeInsets.only(left: 4, right: 4),
+                                        child: InkWell(
+                                          onTap: () async {
+                                            SharedPreferences prefs =
+                                                await SharedPreferences
+                                                    .getInstance();
+                                            prefs.setString('currentbook',
+                                                list[index - 1]['bookname']);
+                                          },
                                           child: Material(
                                             elevation: 5,
                                             borderRadius:
@@ -637,12 +378,12 @@ class _BooksTabState extends State<BooksTab> {
                                                       .size
                                                       .height /
                                                   100 *
-                                                  35,
+                                                  50,
                                               width: MediaQuery.of(context)
                                                       .size
                                                       .width /
                                                   100 *
-                                                  40,
+                                                  28,
                                               decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(12),
@@ -657,13 +398,19 @@ class _BooksTabState extends State<BooksTab> {
                                                         const EdgeInsets.only(
                                                             left: 2,
                                                             right: 2,
-                                                            top: 50),
-                                                    child: Text(
-                                                      "Bookname",
-                                                      style: TextStyle(
-                                                          fontSize: 25,
-                                                          fontWeight:
-                                                              FontWeight.w500),
+                                                            top: 24),
+                                                    child: Wrap(
+                                                      children: [
+                                                        Text(
+                                                          list[index - 1]
+                                                              ['bookname'],
+                                                          style: TextStyle(
+                                                              fontSize: 14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
                                                   Spacer(),
@@ -694,10 +441,15 @@ class _BooksTabState extends State<BooksTab> {
                                                               const EdgeInsets
                                                                   .all(2),
                                                           child: InkWell(
-                                                            onTap: () {},
+                                                            onTap: () {
+                                                              Book().deleteBook(
+                                                                  list[index -
+                                                                          1][
+                                                                      'bookname']);
+                                                            },
                                                             child: Icon(
                                                               Icons.delete,
-                                                              size: 22,
+                                                              size: 18,
                                                               color: Color(
                                                                   0xff112d4e),
                                                             ),
@@ -711,7 +463,7 @@ class _BooksTabState extends State<BooksTab> {
                                                             onTap: () {},
                                                             child: Icon(
                                                               Icons.edit,
-                                                              size: 22,
+                                                              size: 18,
                                                               color: Color(
                                                                   0xff112d4e),
                                                             ),
@@ -725,8 +477,29 @@ class _BooksTabState extends State<BooksTab> {
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      );
+                                    },
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    top: 10.0,
+                                  ),
+                                  child: Container(
+                                    height: MediaQuery.of(context).size.height /
+                                        100 *
+                                        45,
+                                    width: MediaQuery.of(context).size.height /
+                                        100 *
+                                        50,
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            fit: BoxFit.fill,
+                                            image: AssetImage(
+                                                'assets/book_lover.png')),
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
                                   ),
                                 ),
                               ],

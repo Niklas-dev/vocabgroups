@@ -27,7 +27,7 @@ class AuthenticationService {
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
       User user = userCredential.user!;
-      user.updateProfile(displayName: username);
+      user.updateDisplayName(username);
       await DatabaseService(uid: user.uid)
           .updateUserData(username, user.email!);
       return user;

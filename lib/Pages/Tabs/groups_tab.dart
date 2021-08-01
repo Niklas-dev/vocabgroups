@@ -2,9 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:vocalgroups/Authentication/Database.dart';
-import 'package:vocalgroups/Utilis/book.dart';
 
 class GroupsTab extends StatefulWidget {
   @override
@@ -22,704 +21,331 @@ class _GroupsTabState extends State<GroupsTab> {
 
   List groups = [];
 
-  String currentBookName = "english";
+  String currentBookName = "";
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: DatabaseService()
-          .dataCollection
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .snapshots(),
-      builder: (context, AsyncSnapshot usersnapshot) {
-        if (!usersnapshot.hasData) {
-          return CircularProgressIndicator();
-        } else {
-          final list = usersnapshot.data;
-          return Container(
-            margin: MediaQuery.of(context).padding,
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                if (constraints.maxHeight >= 600) {
-                  return Container(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Container(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              "Your Groups",
-                              style: TextStyle(
-                                  fontSize: 30, fontWeight: FontWeight.w500),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 80,
-                          width: MediaQuery.of(context).size.width,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            shrinkWrap: true,
-                            padding: EdgeInsets.symmetric(vertical: 0),
-                            itemCount:
-                                usersnapshot.data.get('groupID').length + 1,
-                            itemBuilder: (context, index) {
-                              if (usersnapshot.data.get('groupID').length ==
-                                  0) {
-                                if (!createButtonOnClicked) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      createButtonOnClicked = true;
-                                      if (!mounted) print("not mounted");
-                                      setState(() {});
-                                    },
-                                    child: Padding(
-                                      padding: EdgeInsets.all(10.0),
-                                      child: Material(
-                                        borderRadius: BorderRadius.circular(10),
-                                        elevation: 5,
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[200],
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          width: 100,
-                                          child: Center(
-                                            child: Icon(Icons.chat),
-                                          ),
+    return Container(
+        margin: MediaQuery.of(context).padding,
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(6),
+              child: Container(
+                width: MediaQuery.of(context).size.width / 100 * 95,
+                height: MediaQuery.of(context).size.height / 100 * 7,
+                decoration: BoxDecoration(
+                  color: const Color(0xff3F72AF),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.all(6),
+                    child: Text(
+                      'Groups',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: 2,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Text("Click on group to Select"),
+            Padding(
+              padding: EdgeInsets.only(top: 6),
+              child: Container(
+                height: MediaQuery.of(context).size.height / 100 * 12.5,
+                width: MediaQuery.of(context).size.width,
+                child: StreamBuilder(
+                  stream: DatabaseService()
+                      .dataCollection
+                      .doc(FirebaseAuth.instance.currentUser!.uid)
+                      .snapshots(),
+                  builder: (context, AsyncSnapshot snapshot) {
+                    if (snapshot.connectionState == ConnectionState.active) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 2.0),
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: snapshot.data.get('groupID').length + 1,
+                          itemBuilder: (context, index) {
+                            final groupdata = snapshot.data;
+                            if (snapshot.data.get('groupID').length == 0) {
+                              return Text("Please create a group");
+                            } else {
+                              if (index == 0) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(6.0),
+                                  child: Material(
+                                    shadowColor: Colors.blue,
+                                    elevation: 5,
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Container(
+                                      width: 120,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.blue,
+                                          width: 1,
                                         ),
+                                        borderRadius: BorderRadius.circular(8),
                                       ),
-                                    ),
-                                  );
-                                } else {
-                                  return GestureDetector(
-                                    onLongPress: () {
-                                      if (!mounted) print("not mounted");
-                                      setState(() {
-                                        createButtonOnClicked = false;
-                                      });
-                                    },
-                                    child: Padding(
-                                      padding: EdgeInsets.all(6),
-                                      child: Material(
-                                        borderRadius: BorderRadius.circular(10),
-                                        elevation: 5,
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[200],
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          width: 100,
-                                          child: Container(
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    if (!mounted)
-                                                      print("not mounted");
-                                                    setState(() {
-                                                      createButtonOnClicked =
-                                                          false;
-                                                    });
-                                                    showCreateGroup(context);
-                                                  },
-                                                  child: Container(
-                                                      child: Icon(
-                                                          Icons.group_add)),
-                                                ),
-                                                Divider(
-                                                  indent: 15,
-                                                  endIndent: 15,
-                                                  color: Colors.black,
-                                                ),
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    if (!mounted)
-                                                      print("not mounted");
-                                                    setState(() {
-                                                      createButtonOnClicked =
-                                                          false;
-                                                    });
-                                                    showJoinGroup(context);
-                                                  },
-                                                  child: Container(
-                                                      child:
-                                                          Icon(Icons.groups)),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                }
-                              } else {
-                                if (index == 0) {
-                                  if (!createButtonOnClicked) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        createButtonOnClicked = true;
-                                        if (!mounted) print("not mounted");
-                                        setState(() {});
-                                      },
-                                      child: Padding(
-                                        padding: EdgeInsets.all(10.0),
-                                        child: Material(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          elevation: 5,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey[200],
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            width: 100,
-                                            child: Center(
-                                              child: Icon(Icons.chat),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  } else {
-                                    return GestureDetector(
-                                      onLongPress: () {
-                                        if (!mounted) print("not mounted");
-                                        setState(() {
-                                          createButtonOnClicked = false;
-                                        });
-                                      },
-                                      child: Padding(
-                                        padding: EdgeInsets.all(6),
-                                        child: Material(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          elevation: 5,
-                                          child: Container(
-                                            alignment: Alignment.center,
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey[200],
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            width: 100,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () =>
+                                                showCreateGroup(context),
                                             child: Container(
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      if (!mounted)
-                                                        print("not mounted");
-                                                      setState(() {
-                                                        createButtonOnClicked =
-                                                            false;
-                                                      });
-                                                      showCreateGroup(context);
-                                                    },
-                                                    child: Container(
-                                                        child: Icon(
-                                                            Icons.group_add)),
-                                                  ),
-                                                  Divider(
-                                                    indent: 15,
-                                                    endIndent: 15,
-                                                    color: Colors.black,
-                                                  ),
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      if (!mounted) return;
-                                                      setState(() {
-                                                        createButtonOnClicked =
-                                                            false;
-                                                      });
-                                                      showJoinGroup(context);
-                                                    },
-                                                    child: Container(
-                                                        child:
-                                                            Icon(Icons.groups)),
-                                                  )
-                                                ],
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                color: Colors.blueGrey[50],
+                                              ),
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  100 *
+                                                  8,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  100 *
+                                                  11,
+                                              child: Icon(
+                                                Icons.group_add,
+                                                color: Color(0xff112d4e),
+                                                size: 35,
                                               ),
                                             ),
                                           ),
-                                        ),
+                                          VerticalDivider(
+                                            indent: 10,
+                                            endIndent: 10,
+                                            thickness: 2,
+                                          ),
+                                          GestureDetector(
+                                            onTap: () => showJoinGroup(context),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                color: Colors.blueGrey[50],
+                                              ),
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  100 *
+                                                  8,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  100 *
+                                                  11,
+                                              child: Icon(
+                                                Icons.groups,
+                                                color: Color(0xff112d4e),
+                                                size: 35,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    );
-                                  }
-                                } else {
-                                  return StreamBuilder(
-                                    stream: DatabaseService()
-                                        .groupCollection
-                                        .doc(list['groupID'][index - 1])
-                                        .snapshots(),
-                                    builder: (context, AsyncSnapshot snapshot) {
-                                      print(snapshot.data['name']);
-                                      if (!snapshot.hasData) {
-                                        return Container(
-                                          child: Text("Loading DATA..."),
-                                        );
-                                      } else {
-                                        return GestureDetector(
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                return StreamBuilder(
+                                  stream: DatabaseService()
+                                      .groupCollection
+                                      .doc(groupdata['groupID'][index - 1])
+                                      .snapshots(),
+                                  builder:
+                                      (context, AsyncSnapshot groupsnapshot) {
+                                    if (groupsnapshot.connectionState ==
+                                        ConnectionState.active) {
+                                      String groupname =
+                                          groupsnapshot.data.get('name');
+                                      return Padding(
+                                        padding: const EdgeInsets.all(6.0),
+                                        child: GestureDetector(
                                           onTap: () {
+                                            debugPrint("Tapped");
                                             currentGroupID =
-                                                list['groupID'][index - 1];
+                                                groupdata['groupID'][index - 1];
+                                            print(currentGroupID);
                                             currentGroupName =
-                                                snapshot.data['name'];
+                                                groupsnapshot.data['name'];
                                             setState(() {});
                                           },
-                                          child: Padding(
-                                            padding: EdgeInsets.all(10.0),
-                                            child: Material(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              elevation: 5,
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.grey[200],
-                                                  border: Border.all(
-                                                      color: currentGroupName ==
-                                                              snapshot.data
-                                                                  .get('name')
-                                                          ? Colors.blueAccent
-                                                          : Colors.transparent),
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                                width: 100,
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(snapshot.data
-                                                        .get('name')),
-                                                    IconButton(
-                                                        onPressed: () async {
-                                                          print("sus");
-                                                          DatabaseService()
-                                                              .leaveGroup(
-                                                                  groupIDCtrl
-                                                                      .text
-                                                                      .trim(),
-                                                                  FirebaseAuth
-                                                                      .instance
-                                                                      .currentUser!
-                                                                      .uid);
-                                                        },
-                                                        icon: Icon(Icons
-                                                            .leave_bags_at_home))
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    },
-                                  );
-                                }
-                              }
-                            },
-                          ),
-                        ),
-                        Divider(
-                          thickness: 2,
-                          indent: 60,
-                          endIndent: 60,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            child: Text(currentGroupName!),
-                          ),
-                        ),
-                        StreamBuilder(
-                            stream: DatabaseService()
-                                .groupCollection
-                                .doc(currentGroupID)
-                                .collection('books')
-                                .snapshots(),
-                            builder: (context, AsyncSnapshot snapshot) {
-                              if (!snapshot.hasData) {
-                                return Container(
-                                  child: Text("No Data"),
-                                );
-                              } else {
-                                return Container(
-                                  height: 300,
-                                  child: ListView.builder(
-                                      scrollDirection: Axis.vertical,
-                                      shrinkWrap: true,
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 0),
-                                      itemCount: snapshot.data.docs.length + 1,
-                                      itemBuilder: (context, index) {
-                                        if (currentGroupName != "") {
-                                          if (index ==
-                                              snapshot.data.docs.length) {
-                                            return GestureDetector(
-                                              onTap: () {
-                                                showUploadBook(context);
-                                              },
-                                              child: Padding(
-                                                padding: EdgeInsets.all(5.0),
-                                                child: Material(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  elevation: 2,
-                                                  child: Container(
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height /
-                                                            100 *
-                                                            6,
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.grey[100],
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                    ),
-                                                    child: Center(
-                                                      child: Icon(Icons.upload),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                          }
-                                        } else {
-                                          return Container(
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              "Select or Create a group",
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            ),
-                                          );
-                                        }
-
-                                        if (!groups.contains(snapshot
-                                            .data.docs[index]['bookname'])) {
-                                          groups.add(snapshot.data.docs[index]
-                                              ['bookname']);
-                                        }
-
-                                        return GestureDetector(
-                                          onTap: () {
-                                            debugPrint("uplaod");
-                                          },
-                                          child: Padding(
-                                            padding: EdgeInsets.all(5.0),
-                                            child: Material(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              elevation: 2,
-                                              child: Container(
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height /
-                                                    100 *
-                                                    6,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.grey[100],
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                                child: Center(
-                                                  child: Text(snapshot.data
-                                                      .docs[index]['bookname']),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      }),
-                                );
-                              }
-                            }),
-                      ],
-                    ),
-                  );
-                } else {
-                  return Container(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Container(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              "Your Groups",
-                              style: TextStyle(
-                                  fontSize: 30, fontWeight: FontWeight.w500),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 80,
-                          width: MediaQuery.of(context).size.width,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            shrinkWrap: true,
-                            padding: EdgeInsets.symmetric(vertical: 0),
-                            itemCount:
-                                usersnapshot.data.get('groupID').length + 1,
-                            itemBuilder: (context, index) {
-                              if (usersnapshot.data.get('groupID').length ==
-                                  0) {
-                                if (!createButtonOnClicked) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      createButtonOnClicked = true;
-                                      if (!mounted) return;
-                                      setState(() {});
-                                    },
-                                    child: Padding(
-                                      padding: EdgeInsets.all(10.0),
-                                      child: Material(
-                                        borderRadius: BorderRadius.circular(10),
-                                        elevation: 5,
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[200],
+                                          child: Material(
+                                            elevation: 5,
+                                            shadowColor: Colors.blue,
                                             borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          width: 100,
-                                          child: Center(
-                                            child: Icon(Icons.chat),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                } else {
-                                  return GestureDetector(
-                                    onLongPress: () {
-                                      if (!mounted) return;
-                                      setState(() {
-                                        createButtonOnClicked = false;
-                                      });
-                                    },
-                                    child: Padding(
-                                      padding: EdgeInsets.all(6),
-                                      child: Material(
-                                        borderRadius: BorderRadius.circular(10),
-                                        elevation: 5,
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[200],
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          width: 100,
-                                          child: Container(
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    if (!mounted) return;
-                                                    setState(() {
-                                                      createButtonOnClicked =
-                                                          false;
-                                                    });
-                                                    showCreateGroup(context);
-                                                  },
-                                                  child: Container(
-                                                      child: Icon(
-                                                          Icons.group_add)),
-                                                ),
-                                                Divider(
-                                                  indent: 15,
-                                                  endIndent: 15,
-                                                  color: Colors.black,
-                                                ),
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    if (!mounted) return;
-                                                    setState(() {
-                                                      createButtonOnClicked =
-                                                          false;
-                                                    });
-                                                    showJoinGroup(context);
-                                                  },
-                                                  child: Container(
-                                                      child:
-                                                          Icon(Icons.groups)),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                }
-                              } else {
-                                if (index == 0) {
-                                  if (!createButtonOnClicked) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        if (!mounted) return;
-                                        createButtonOnClicked = true;
-                                        setState(() {});
-                                      },
-                                      child: Padding(
-                                        padding: EdgeInsets.all(10.0),
-                                        child: Material(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          elevation: 5,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey[200],
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            width: 100,
-                                            child: Center(
-                                              child: Icon(Icons.chat),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  } else {
-                                    return GestureDetector(
-                                      onLongPress: () {
-                                        if (!mounted) return;
-                                        setState(() {
-                                          createButtonOnClicked = false;
-                                        });
-                                      },
-                                      child: Padding(
-                                        padding: EdgeInsets.all(6),
-                                        child: Material(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          elevation: 5,
-                                          child: Container(
-                                            alignment: Alignment.center,
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey[200],
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            width: 100,
+                                                BorderRadius.circular(8),
                                             child: Container(
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      if (!mounted) return;
-                                                      setState(() {
-                                                        createButtonOnClicked =
-                                                            false;
-                                                      });
-                                                      showCreateGroup(context);
-                                                    },
-                                                    child: Container(
-                                                        child: Icon(
-                                                            Icons.group_add)),
+                                              width: 120,
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color: currentGroupName ==
+                                                          groupsnapshot.data
+                                                              .get('name')
+                                                      ? Color(0xff112d4e)
+                                                      : Colors.blue,
+                                                  width: currentGroupName ==
+                                                          groupsnapshot.data
+                                                              .get('name')
+                                                      ? 2.5
+                                                      : 1,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              child: Align(
+                                                alignment: Alignment.center,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(2.0),
+                                                  child: Text(
+                                                    "$groupname",
+                                                    overflow: TextOverflow.fade,
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        color:
+                                                            Color(0xff112d4e),
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.w500),
                                                   ),
-                                                  Divider(
-                                                    indent: 15,
-                                                    endIndent: 15,
-                                                    color: Colors.black,
-                                                  ),
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      if (!mounted) return;
-                                                      setState(() {
-                                                        createButtonOnClicked =
-                                                            false;
-                                                      });
-                                                      showJoinGroup(context);
-                                                    },
-                                                    child: Container(
-                                                        child:
-                                                            Icon(Icons.groups)),
-                                                  )
-                                                ],
+                                                ),
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    );
-                                  }
-                                } else {
-                                  return StreamBuilder(
-                                    stream: DatabaseService()
-                                        .groupCollection
-                                        .doc(list['groupID'][index - 1])
-                                        .snapshots(),
-                                    builder: (context, AsyncSnapshot snapshot) {
-                                      if (!snapshot.hasData) {
-                                        return Container(
-                                          child: Text("Loading DATA..."),
-                                        );
-                                      } else {
-                                        return Padding(
-                                          padding: EdgeInsets.all(10.0),
+                                      );
+                                    } else {
+                                      return CircularProgressIndicator();
+                                    }
+                                  },
+                                );
+                              }
+                            }
+                          },
+                        ),
+                      );
+                    } else {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(),
+                        ],
+                      );
+                    }
+                  },
+                ),
+              ),
+            ),
+            Divider(
+              thickness: 2,
+              indent: 10,
+              endIndent: 10,
+            ),
+            Padding(
+              padding: EdgeInsets.all(12),
+              child: Material(
+                elevation: 5,
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.grey[50],
+                  ),
+                  width: 400,
+                  height: 300,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      StreamBuilder(
+                        stream: DatabaseService()
+                            .groupCollection
+                            .doc(currentGroupID)
+                            .collection('books')
+                            .snapshots(),
+                        builder: (context, AsyncSnapshot booksnapshot) {
+                          if (booksnapshot.connectionState ==
+                              ConnectionState.active) {
+                            return Container(
+                              width: 200,
+                              height: 200,
+                              child: ListView.builder(
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                padding: EdgeInsets.symmetric(vertical: 0),
+                                itemCount: booksnapshot.data.docs.length + 1,
+                                itemBuilder: (context, index) {
+                                  if (currentGroupName != "") {
+                                    if (index == 0) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          showUploadBook(context);
+                                        },
+                                        child: Padding(
+                                          padding: EdgeInsets.all(5.0),
                                           child: Material(
                                             borderRadius:
                                                 BorderRadius.circular(10),
-                                            elevation: 5,
+                                            elevation: 2,
                                             child: Container(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  100 *
+                                                  6,
                                               decoration: BoxDecoration(
-                                                color: Colors.grey[200],
+                                                color: Colors.grey[100],
                                                 borderRadius:
                                                     BorderRadius.circular(10),
                                               ),
-                                              width: 100,
                                               child: Center(
-                                                child: Text(
-                                                    snapshot.data.get('name')),
+                                                child: Icon(Icons.upload),
                                               ),
                                             ),
                                           ),
-                                        );
-                                      }
-                                    },
-                                  );
-                                }
-                              }
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-              },
-            ),
-          );
-        }
-      },
-    );
-  }
-
-  getFirstGroup() async {
-    currentGroupName = groups[0];
-    setState(() {});
+                                        ),
+                                      );
+                                    } else {
+                                      return Container(
+                                        height: 10,
+                                        width: 10,
+                                        color: Colors.blue,
+                                      );
+                                    }
+                                  } else {
+                                    return Container();
+                                  }
+                                },
+                              ),
+                            );
+                          } else {
+                            return CircularProgressIndicator();
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            )
+          ],
+        ));
   }
 
   void showCreateGroup(BuildContext context) {
@@ -769,21 +395,24 @@ class _GroupsTabState extends State<GroupsTab> {
                         padding: const EdgeInsets.only(
                           top: 8,
                         ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                              borderRadius: BorderRadius.circular(8)),
-                          height:
-                              MediaQuery.of(context).size.height / 100 * 5.5,
-                          width: MediaQuery.of(context).size.width / 100 * 25,
-                          child: Center(
-                              child: Text(
-                            "Cancel",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          )),
+                        child: InkWell(
+                          onTap: () => Navigator.of(context).pop(),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(8)),
+                            height:
+                                MediaQuery.of(context).size.height / 100 * 5.5,
+                            width: MediaQuery.of(context).size.width / 100 * 25,
+                            child: Center(
+                                child: Text(
+                              "Cancel",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            )),
+                          ),
                         ),
                       ),
                       InkWell(
@@ -871,21 +500,24 @@ class _GroupsTabState extends State<GroupsTab> {
                         padding: const EdgeInsets.only(
                           top: 8,
                         ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                              borderRadius: BorderRadius.circular(8)),
-                          height:
-                              MediaQuery.of(context).size.height / 100 * 5.5,
-                          width: MediaQuery.of(context).size.width / 100 * 25,
-                          child: Center(
-                              child: Text(
-                            "Cancel",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          )),
+                        child: InkWell(
+                          onTap: () => Navigator.of(context).pop(),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(8)),
+                            height:
+                                MediaQuery.of(context).size.height / 100 * 5.5,
+                            width: MediaQuery.of(context).size.width / 100 * 25,
+                            child: Center(
+                                child: Text(
+                              "Cancel",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            )),
+                          ),
                         ),
                       ),
                       InkWell(
@@ -957,69 +589,85 @@ class _GroupsTabState extends State<GroupsTab> {
                               .collection('books')
                               .snapshots(),
                           builder: (context, AsyncSnapshot snapshot) {
-                            if (!snapshot.hasData)
+                            if (snapshot.connectionState !=
+                                ConnectionState.active)
                               return CircularProgressIndicator();
                             else {
-                              List<DropdownMenuItem> bookItems = [];
-                              for (int i = 0;
-                                  i < snapshot.data!.docs.length;
-                                  i++) {
-                                DocumentSnapshot snap = snapshot.data!.docs[i];
-                                bookItems.add(
-                                  DropdownMenuItem(
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width /
-                                          100 *
-                                          25,
-                                      child: Text(
-                                        snap.id,
-                                        style: TextStyle(
-                                            fontSize: 20, color: Colors.black),
+                              if (snapshot.data!.docs.length == 0) {
+                                return Container(
+                                  child: Text("You have no books to upload"),
+                                );
+                              } else {
+                                DocumentSnapshot snap = snapshot.data!.docs[0];
+                                String currentBookName = snap.id;
+                                print(currentBookName);
+                                List<DropdownMenuItem> bookItems = [];
+
+                                for (int i = 0;
+                                    i < snapshot.data!.docs.length;
+                                    i++) {
+                                  DocumentSnapshot snap =
+                                      snapshot.data!.docs[i];
+                                  bookItems.add(
+                                    DropdownMenuItem(
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                100 *
+                                                25,
+                                        child: Text(
+                                          snap.id,
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.black),
+                                        ),
                                       ),
+                                      value: "${snap.id}",
                                     ),
-                                    value: "${snap.id}",
+                                  );
+                                }
+                                return Container(
+                                  width: MediaQuery.of(context).size.width /
+                                      100 *
+                                      40,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Colors.grey[100],
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        Icon(Icons.bookmarks,
+                                            size: 20.0,
+                                            color: Color(0xff112d4e)),
+                                        DropdownButtonHideUnderline(
+                                          child: DropdownButton<dynamic>(
+                                            isExpanded: false,
+                                            dropdownColor: Color(0xffdbe2ef),
+                                            items: bookItems,
+                                            onChanged: (bookValue) {
+                                              setState(() {
+                                                currentBookName = bookValue;
+                                              });
+                                            },
+                                            value: currentBookName,
+                                            elevation: 5,
+                                            underline: null,
+                                            hint: new Text(
+                                              "Choose Book",
+                                              style: TextStyle(
+                                                  color: Color(0xff112d4e)),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 );
                               }
-                              return Container(
-                                width: MediaQuery.of(context).size.width /
-                                    100 *
-                                    40,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.grey[100],
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(2.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      Icon(Icons.bookmarks,
-                                          size: 20.0, color: Color(0xff112d4e)),
-                                      DropdownButtonHideUnderline(
-                                        child: DropdownButton<dynamic>(
-                                          isExpanded: false,
-                                          dropdownColor: Color(0xffdbe2ef),
-                                          items: bookItems,
-                                          onChanged: (bookValue) {
-                                            setState(() {
-                                              currentBookName = bookValue;
-                                            });
-                                          },
-                                          value: currentBookName,
-                                          elevation: 5,
-                                          underline: null,
-                                          hint: new Text(
-                                            "Choose Book",
-                                            style: TextStyle(
-                                                color: Color(0xff112d4e)),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
                             }
                           },
                         ),

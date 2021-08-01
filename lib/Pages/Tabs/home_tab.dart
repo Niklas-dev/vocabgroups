@@ -48,8 +48,7 @@ class _HomeTabState extends State<HomeTab> {
   int booksamount = 0;
   getCurrentUserListen() async {
     if (mounted) {
-      booksamount = await Book().getBooksAmount();
-      if (!mounted) return;
+      if (mounted) booksamount = await Book().getBooksAmount();
       if (FirebaseAuth.instance.currentUser != null) {
         DatabaseService()
             .dataCollection
@@ -59,7 +58,7 @@ class _HomeTabState extends State<HomeTab> {
           username = event.get('username');
           email = event.get('email');
 
-          setState(() {});
+          if (mounted) setState(() {});
         });
       }
     }
@@ -75,7 +74,7 @@ class _HomeTabState extends State<HomeTab> {
           .listen((event) {});
       username = userdata!.get('username');
       email = userdata.get('email');
-      setState(() {});
+      if (mounted) setState(() {});
     }
   }
 
@@ -93,7 +92,33 @@ class _HomeTabState extends State<HomeTab> {
               child: Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(top: 5),
+                    padding: const EdgeInsets.all(6),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width / 100 * 95,
+                      height: MediaQuery.of(context).size.height / 100 * 7,
+                      decoration: BoxDecoration(
+                        color: const Color(0xff3F72AF),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Container(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.all(6),
+                          child: Text(
+                            'Dashboard',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 30,
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: 2,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 1),
                     child: Stack(
                       alignment: Alignment.topCenter,
                       children: [
@@ -133,7 +158,7 @@ class _HomeTabState extends State<HomeTab> {
                                           decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(12),
-                                            color: Colors.grey[200],
+                                            color: Colors.grey[100],
                                           ),
                                           child: Padding(
                                             padding: EdgeInsets.all(3),
@@ -189,7 +214,7 @@ class _HomeTabState extends State<HomeTab> {
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(12),
-                                              color: Colors.grey[200],
+                                              color: Colors.grey[100],
                                             ),
                                             child: Padding(
                                               padding: EdgeInsets.all(3),
@@ -244,7 +269,7 @@ class _HomeTabState extends State<HomeTab> {
                                           child: Container(
                                             height: 50,
                                             decoration: BoxDecoration(
-                                                color: Colors.grey[200],
+                                                color: Colors.grey[100],
                                                 borderRadius:
                                                     BorderRadius.circular(12)),
                                             child: Padding(
@@ -350,7 +375,33 @@ class _HomeTabState extends State<HomeTab> {
               child: Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(top: 5),
+                    padding: const EdgeInsets.all(6),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width / 100 * 95,
+                      height: MediaQuery.of(context).size.height / 100 * 8,
+                      decoration: BoxDecoration(
+                        color: const Color(0xff3F72AF),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Container(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.all(6),
+                          child: Text(
+                            'Dashboard',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 30,
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: 2,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 0),
                     child: Stack(
                       alignment: Alignment.topCenter,
                       children: [

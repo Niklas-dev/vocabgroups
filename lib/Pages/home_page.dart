@@ -92,7 +92,7 @@ class _HomePageState extends State<HomePage> {
             tabs: [
               GButton(
                 icon: Icons.home,
-                text: 'Home',
+                text: 'Dashboard',
               ),
               GButton(
                 icon: Icons.bookmark,
