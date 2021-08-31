@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:vocalgroups/Utilis/keyboard_check.dart';
 import 'Tabs/book_tab.dart';
 import 'Tabs/books_tab.dart';
@@ -41,13 +43,26 @@ class _HomePageState extends State<HomePage> {
     setState(() {});
   }
 
+  PageController _controller = PageController(
+    initialPage: 0,
+  );
+
   void inputData() {}
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+    MaterialPageRoute(builder: (context) => HomePage()).dispose();
+  }
+
+  final auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
     onTranslatorPage();
-    return Container(
-      child: Scaffold(
+
+    return Scaffold(
         backgroundColor: Colors.white,
         resizeToAvoidBottomInset: onTranslatorBool,
         floatingActionButton: KeyboardVisibilityBuilder(
@@ -73,6 +88,7 @@ class _HomePageState extends State<HomePage> {
         bottomNavigationBar: Padding(
           padding: EdgeInsets.only(bottom: 2.5),
           child: GNav(
+            selectedIndex: currentIndex,
             rippleColor:
                 Colors.blueGrey, // tab button ripple color when pressed
             hoverColor: Colors.grey, // tab button hover color
@@ -114,12 +130,30 @@ class _HomePageState extends State<HomePage> {
 
             onTabChange: (index) {
               currentIndex = index;
-              setState(() {});
+
+              /*setState(() {
+                      PageView(
+              controller: _controller,
+              onPageChanged: (page) {
+                currentIndex = page;
+    
+                setState(() {});
+              },
+              children: [
+                HomeTab(),
+                BooksTab(),
+                BookTab(),
+                GroupsTab(),
+                TranslatorTab(),
+              ],
+            ),
+                    _controller.animateToPage(index,
+                        curve: Curves.linear,
+                        duration: Duration(milliseconds: 400));
+                  });*/
             },
           ),
         ),
-        body: selectTab(currentIndex),
-      ),
-    );
+        body: selectTab(currentIndex));
   }
 }

@@ -95,7 +95,7 @@ class _TranslatorTabState extends State<TranslatorTab> {
             ),
             Padding(
               padding: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height / 100 * 5,
+                top: MediaQuery.of(context).size.height / 100 * 0.5,
                 left: 5,
                 right: 5,
               ),
@@ -147,26 +147,22 @@ class _TranslatorTabState extends State<TranslatorTab> {
                         IconButton(onPressed: () {}, icon: Icon(Icons.mic))
                       ],
                     ),
-                    Stack(
-                      children: [
-                        Container(
-                          color: Colors.white,
-                          height: 100,
-                          child: TextField(
-                            controller: inputLang,
-                            minLines: 4,
-                            maxLines: 4,
-                            decoration: InputDecoration(
-                              border: new OutlineInputBorder(
-                                borderRadius: const BorderRadius.all(
-                                  const Radius.circular(10.0),
-                                ),
-                              ),
-                              contentPadding: EdgeInsets.all(5),
+                    Container(
+                      color: Colors.white,
+                      height: 100,
+                      child: TextField(
+                        controller: inputLang,
+                        minLines: 4,
+                        maxLines: 4,
+                        decoration: InputDecoration(
+                          border: new OutlineInputBorder(
+                            borderRadius: const BorderRadius.all(
+                              const Radius.circular(10.0),
                             ),
                           ),
+                          contentPadding: EdgeInsets.all(5),
                         ),
-                      ],
+                      ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -212,28 +208,24 @@ class _TranslatorTabState extends State<TranslatorTab> {
                             onPressed: () {}, icon: Icon(Icons.headphones))
                       ],
                     ),
-                    Stack(
-                      children: [
-                        Container(
-                          color: Colors.white,
-                          height: 100,
-                          child: TextField(
-                            controller: outputLang,
-                            readOnly: true,
-                            minLines: 4,
-                            maxLines: 4,
-                            decoration: InputDecoration(
-                              hintText: 'Translation...',
-                              border: new OutlineInputBorder(
-                                borderRadius: const BorderRadius.all(
-                                  const Radius.circular(10.0),
-                                ),
-                              ),
-                              contentPadding: EdgeInsets.all(5),
+                    Container(
+                      color: Colors.white,
+                      height: 100,
+                      child: TextField(
+                        controller: outputLang,
+                        readOnly: true,
+                        minLines: 4,
+                        maxLines: 4,
+                        decoration: InputDecoration(
+                          hintText: 'Translation...',
+                          border: new OutlineInputBorder(
+                            borderRadius: const BorderRadius.all(
+                              const Radius.circular(10.0),
                             ),
                           ),
+                          contentPadding: EdgeInsets.all(5),
                         ),
-                      ],
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.all(5),
@@ -262,8 +254,8 @@ class _TranslatorTabState extends State<TranslatorTab> {
                       ),
                     ),
                     Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height / 100 * 32,
+                      width: MediaQuery.of(context).size.width / 100 * 80,
+                      height: MediaQuery.of(context).size.height / 100 * 25,
                       decoration: BoxDecoration(
                           color: Colors.white,
                           image: DecorationImage(

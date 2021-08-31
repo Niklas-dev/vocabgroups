@@ -2,8 +2,10 @@ import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:is_first_run/is_first_run.dart';
 import 'package:vocalgroups/Authentication/authentication.dart';
 import 'package:vocalgroups/Pages/home_page.dart';
+import 'package:vocalgroups/Pages/splashload.dart';
 
 import 'login_page.dart';
 
@@ -220,6 +222,30 @@ class _RegisterPageState extends State<RegisterPage> {
                                 onTap: () async {
                                   AuthenticationService()
                                       .signUp(_email, _password, _username);
+                                  String? message =
+                                      await AuthenticationService()
+                                          .signUp(_email, _password, _username);
+                                  if (message != "")
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                      backgroundColor: Colors.white,
+                                      content: Text(
+                                        message!,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      duration: const Duration(seconds: 3),
+                                      action: SnackBarAction(
+                                        label: 'Ok',
+                                        onPressed: () async {
+                                          ScaffoldMessenger.of(context)
+                                              .clearSnackBars();
+                                        },
+                                      ),
+                                    ));
                                   //email.clear();
                                   //password.clear();
                                 },
@@ -458,10 +484,30 @@ class _RegisterPageState extends State<RegisterPage> {
                               alignment: Alignment.center,
                               child: InkWell(
                                 onTap: () async {
-                                  AuthenticationService()
-                                      .signUp(_email, _password, _username);
-                                  //email.clear();
-                                  //password.clear();
+                                  String? message =
+                                      await AuthenticationService()
+                                          .signUp(_email, _password, _username);
+                                  if (message != "")
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                      backgroundColor: Colors.white,
+                                      content: Text(
+                                        message!,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      duration: const Duration(seconds: 3),
+                                      action: SnackBarAction(
+                                        label: 'Ok',
+                                        onPressed: () async {
+                                          ScaffoldMessenger.of(context)
+                                              .clearSnackBars();
+                                        },
+                                      ),
+                                    ));
                                 },
                                 child: Text(
                                   "Register",
@@ -515,6 +561,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void isLoggedIn() async {
+    bool firstRun = await IsFirstRun.isFirstRun();
     if (mounted) {
       auth.authStateChanges().listen(
         (user) {
@@ -526,8 +573,13 @@ class _RegisterPageState extends State<RegisterPage> {
               loggedInCheck = true;
               print(auth.currentUser!.email);
 
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => HomePage()));
+              if (firstRun) {
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => SplashPage()));
+              } else {
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => HomePage()));
+              }
             }
           }
         },

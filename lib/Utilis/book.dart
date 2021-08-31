@@ -17,8 +17,57 @@ class Book {
     this.lastbook,
   });
 
-  addBook(String bookname, bool public, int index) {
+  addBook(String bookname, bool public, int index, String leftColumnName,
+      String rightColumnName) {
     DatabaseService()
+        .dataCollection
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('books')
+        .doc(bookname)
+        .set({
+      'bookname': bookname,
+      'public': public,
+      'index': index,
+      'leftColumnName': leftColumnName,
+      'rightColumnName': rightColumnName,
+      'leftContent': <String>['Use the add Button'],
+      'rightContent': <String>['to add more rows'],
+    });
+  }
+
+  editBook(String oldbookname, String bookname, String leftColumnName,
+      String rightColumnName, bool public, int index) {
+    if (bookname != "") {
+      DatabaseService()
+          .dataCollection
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection('books')
+          .doc(oldbookname)
+          .set({
+        'bookname': bookname,
+      });
+    }
+    if (leftColumnName != "") {
+      DatabaseService()
+          .dataCollection
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection('books')
+          .doc(oldbookname)
+          .set({
+        'leftColumnName': leftColumnName,
+      });
+    }
+    if (rightColumnName != "") {
+      DatabaseService()
+          .dataCollection
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection('books')
+          .doc(oldbookname)
+          .set({
+        'rightColumnName': rightColumnName,
+      });
+    }
+    /*DatabaseService()
         .dataCollection
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('books')
@@ -31,7 +80,7 @@ class Book {
       'rightColumnName': 'Right',
       'leftContent': <String>['Use the add Button'],
       'rightContent': <String>['to add more rows'],
-    });
+    });*/
   }
 
   deleteBook(String bookname) {
@@ -62,12 +111,20 @@ class Book {
 
     List<String>? newLeftContent;
     List<String>? newRightContent;
+
+    String leftName = "";
+    String rightName = "";
+
     DocumentSnapshot snapshot = await DatabaseService()
         .dataCollection
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('books')
         .doc(bookname)
         .get();
+
+    leftName = snapshot.get('leftColumnName');
+    rightName = snapshot.get('rightColumnName');
+
     for (String item in snapshot.get('leftContent')) {
       oldLeftContent.add(item);
     }
@@ -94,8 +151,8 @@ class Book {
       'bookname': bookname,
       'public': public,
       'index': index,
-      'leftColumnName': 'Left',
-      'rightColumnName': 'Right',
+      'leftColumnName': leftName,
+      'rightColumnName': rightName,
       'leftContent': newLeftContent,
       'rightContent': newRightContent,
     });
@@ -109,12 +166,20 @@ class Book {
 
     List<String>? newLeftContent;
     List<String>? newRightContent;
+
+    String leftName = "";
+    String rightName = "";
+
     DocumentSnapshot snapshot = await DatabaseService()
         .dataCollection
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('books')
         .doc(bookname)
         .get();
+
+    leftName = snapshot.get('leftColumnName');
+    rightName = snapshot.get('rightColumnName');
+
     for (String item in snapshot.get('leftContent')) {
       oldLeftContent.add(item);
     }
@@ -140,8 +205,8 @@ class Book {
       'bookname': bookname,
       'public': public,
       'index': index,
-      'leftColumnName': 'Left',
-      'rightColumnName': 'Right',
+      'leftColumnName': leftName,
+      'rightColumnName': rightName,
       'leftContent': newLeftContent,
       'rightContent': newRightContent,
     });

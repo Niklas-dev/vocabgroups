@@ -24,11 +24,17 @@ dependencies:
   firebase_core: ^1.4.0
   firebase_auth: ^3.0.1
 
+  firebase_crashlytics: ^2.2.1
+
   shared_preferences: ^2.0.6
+
+  animate_icons: ^2.0.0
 
   cloud_firestore: ^2.4.0
 
   provider: ^5.0.0
+
+  is_first_run: ^1.0.0
 
 
   flutter_svg: ^0.22.0
@@ -64,6 +70,8 @@ flutter:
   assets:
     - assets/translate.png
     - assets/empty.png
+    - assets/choose.png
+    - assets/community.png
     - assets/background.png
     - assets/notfound.png
     - assets/book_lover.png

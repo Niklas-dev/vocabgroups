@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vocalgroups/Authentication/Database.dart';
+import 'package:vocalgroups/Authentication/authentication.dart';
 import 'package:vocalgroups/Pages/auth/login_page.dart';
-import 'package:vocalgroups/Utilis/book.dart';
 
 import '../home_page.dart';
 
@@ -25,6 +25,7 @@ class _HomeTabState extends State<HomeTab> {
   }
 
   void dispose() {
+    MaterialPageRoute(builder: (context) => HomeTab()).dispose();
     MaterialPageRoute(builder: (context) => HomePage()).dispose();
     super.dispose();
   }
@@ -46,45 +47,14 @@ class _HomeTabState extends State<HomeTab> {
 
   bool updated = false;
   int booksamount = 0;
-  getCurrentUserListen() async {
-    if (mounted) {
-      if (mounted) booksamount = await Book().getBooksAmount();
-      if (FirebaseAuth.instance.currentUser != null) {
-        DatabaseService()
-            .dataCollection
-            .doc(FirebaseAuth.instance.currentUser!.uid)
-            .snapshots()
-            .listen((event) {
-          username = event.get('username');
-          email = event.get('email');
-
-          if (mounted) setState(() {});
-        });
-      }
-    }
-  }
-
-  Future getCurrentUser() async {
-    DocumentSnapshot? userdata;
-    if (FirebaseAuth.instance.currentUser != null) {
-      DatabaseService()
-          .dataCollection
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .snapshots()
-          .listen((event) {});
-      username = userdata!.get('username');
-      email = userdata.get('email');
-      if (mounted) setState(() {});
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     updateStatePage();
-    getCurrentUserListen();
 
     return LayoutBuilder(builder: (context, constraints) {
       if (constraints.maxHeight >= 600) {
+        print(constraints.maxHeight);
         return SingleChildScrollView(
           child: Container(
             margin: MediaQuery.of(context).padding,
@@ -119,247 +89,253 @@ class _HomeTabState extends State<HomeTab> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 1),
-                    child: Stack(
-                      alignment: Alignment.topCenter,
+                    child: Column(
                       children: [
-                        Container(
-                          height: MediaQuery.of(context).size.height / 100 * 85,
-                          width: MediaQuery.of(context).size.width / 100 * 98,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12)),
-                        ),
-                        Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(top: 20),
-                              child: Material(
-                                borderRadius: BorderRadius.circular(12),
-                                elevation: 4,
-                                child: Container(
-                                  height: MediaQuery.of(context).size.height /
-                                      100 *
-                                      30,
-                                  width: MediaQuery.of(context).size.width /
-                                      100 *
-                                      93.5,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(12)),
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 8, right: 8, top: 8, bottom: 8),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            color: Colors.grey[100],
-                                          ),
-                                          child: Padding(
-                                            padding: EdgeInsets.all(3),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                RichText(
-                                                  text: TextSpan(
-                                                    style: new TextStyle(
-                                                      fontSize: 0.0,
-                                                      color: Colors.black,
+                        Padding(
+                          padding: EdgeInsets.only(top: 20),
+                          child: Material(
+                            borderRadius: BorderRadius.circular(12),
+                            elevation: 4,
+                            child: StreamBuilder<Object>(
+                                stream: DatabaseService()
+                                    .dataCollection
+                                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                                    .snapshots(),
+                                builder: (context, AsyncSnapshot snapshot) {
+                                  if (snapshot.hasData) {
+                                    username = snapshot.data["username"];
+                                    email = snapshot.data["email"];
+                                    return Container(
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              100 *
+                                              20,
+                                      width: MediaQuery.of(context).size.width /
+                                          100 *
+                                          93.5,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(12)),
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 8,
+                                            right: 8,
+                                            top: 8,
+                                            bottom: 8),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                color: Colors.grey[50],
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.all(3),
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    RichText(
+                                                      text: TextSpan(
+                                                        style: new TextStyle(
+                                                          fontSize: 0.0,
+                                                          color: Colors.black,
+                                                        ),
+                                                        children: <TextSpan>[
+                                                          TextSpan(
+                                                            text: 'User: ',
+                                                            style: TextStyle(
+                                                                fontSize: 20,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400),
+                                                          ),
+                                                          TextSpan(
+                                                            text:
+                                                                '${username!}',
+                                                            style: TextStyle(
+                                                                fontSize: 18,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w300),
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
-                                                    children: <TextSpan>[
-                                                      TextSpan(
-                                                        text: 'User: ',
-                                                        style: TextStyle(
-                                                            fontSize: 20,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w400),
+                                                    IconButton(
+                                                      onPressed: () {
+                                                        showUpdateName(context);
+                                                      },
+                                                      icon: Icon(Icons.edit),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  color: Colors.grey[50],
+                                                ),
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(3),
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      RichText(
+                                                        text: TextSpan(
+                                                          style: new TextStyle(
+                                                            fontSize: 0.0,
+                                                            color: Colors.black,
+                                                          ),
+                                                          children: <TextSpan>[
+                                                            TextSpan(
+                                                              text: 'Email: ',
+                                                              style: TextStyle(
+                                                                  fontSize: 20,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400),
+                                                            ),
+                                                            TextSpan(
+                                                              text: '${email!}',
+                                                              style: TextStyle(
+                                                                  fontSize: 18,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w300),
+                                                            ),
+                                                          ],
+                                                        ),
                                                       ),
-                                                      TextSpan(
-                                                        text: '${username!}',
-                                                        style: TextStyle(
-                                                            fontSize: 18,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w300),
-                                                      ),
+                                                      IconButton(
+                                                        onPressed: () {
+                                                          showUpdateEmail(
+                                                              context);
+                                                        },
+                                                        icon: Icon(Icons.edit),
+                                                      )
                                                     ],
                                                   ),
-                                                ),
-                                                IconButton(
-                                                  onPressed: () {
-                                                    showUpdateName(context);
-                                                  },
-                                                  icon: Icon(Icons.edit),
-                                                )
-                                              ],
-                                            ),
-                                          ),
+                                                )),
+                                          ],
                                         ),
-                                        Divider(
-                                          thickness: 0,
-                                          indent: 2,
-                                          endIndent: 2,
-                                        ),
-                                        Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                              color: Colors.grey[100],
-                                            ),
-                                            child: Padding(
-                                              padding: EdgeInsets.all(3),
-                                              child: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  RichText(
-                                                    text: TextSpan(
-                                                      style: new TextStyle(
-                                                        fontSize: 0.0,
-                                                        color: Colors.black,
-                                                      ),
-                                                      children: <TextSpan>[
-                                                        TextSpan(
-                                                          text: 'Email: ',
-                                                          style: TextStyle(
-                                                              fontSize: 20,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400),
-                                                        ),
-                                                        TextSpan(
-                                                          text: '${email!}',
-                                                          style: TextStyle(
-                                                              fontSize: 18,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w300),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  IconButton(
-                                                    onPressed: () {
-                                                      showUpdateEmail(context);
-                                                    },
-                                                    icon: Icon(Icons.edit),
-                                                  )
-                                                ],
-                                              ),
-                                            )),
-                                        Divider(
-                                          thickness: 0,
-                                          indent: 2,
-                                          endIndent: 2,
-                                        ),
-                                        Expanded(
-                                          child: Container(
-                                            height: 50,
-                                            decoration: BoxDecoration(
-                                                color: Colors.grey[100],
-                                                borderRadius:
-                                                    BorderRadius.circular(12)),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(5.0),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
-                                                children: [
-                                                  Text(
-                                                    'Books $booksamount',
-                                                    style:
-                                                        TextStyle(fontSize: 20),
-                                                  ),
-                                                  Container(
-                                                    height: 30,
-                                                    child: VerticalDivider(
-                                                      thickness: 1,
-                                                      color: Colors.grey,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    'Contacts ${0}',
-                                                    style:
-                                                        TextStyle(fontSize: 20),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 20),
-                              child: Material(
-                                borderRadius: BorderRadius.circular(12),
-                                elevation: 4,
-                                child: Container(
-                                  height: MediaQuery.of(context).size.height /
-                                      100 *
-                                      35,
-                                  width: MediaQuery.of(context).size.width /
-                                      100 *
-                                      93.5,
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.fitHeight,
-                                          image:
-                                              AssetImage('assets/empty.png')),
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(12)),
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 8, right: 8, top: 8, bottom: 8),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              child: IconButton(
-                                onPressed: () {
-                                  if (mounted) {
-                                    FirebaseAuth.instance.signOut();
+                                      ),
+                                    );
+                                  } else {
+                                    return CircularProgressIndicator();
                                   }
-
-                                  Future.delayed(Duration(milliseconds: 100))
-                                      .then((value) => Navigator.of(context)
-                                        ..pushReplacement(MaterialPageRoute(
-                                            builder: (context) =>
-                                                LoginPage())));
-                                },
-                                icon: Icon(Icons.logout),
-                              ),
-                            ),
-                          ],
+                                }),
+                          ),
                         ),
                       ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: Material(
+                      borderRadius: BorderRadius.circular(12),
+                      elevation: 4,
+                      child: Container(
+                        height: MediaQuery.of(context).size.height / 100 * 35,
+                        width: MediaQuery.of(context).size.width / 100 * 93.5,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                fit: BoxFit.fitHeight,
+                                image: AssetImage('assets/empty.png')),
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12)),
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                              left: 8, right: 8, top: 8, bottom: 8),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Material(
+                      elevation: 5,
+                      borderRadius: BorderRadius.circular(10),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                        ),
+                        width: MediaQuery.of(context).size.width / 100 * 94,
+                        height: MediaQuery.of(context).size.height / 100 * 9,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      child: IconButton(
+                                        onPressed: () {
+                                          if (mounted) {
+                                            FirebaseAuth.instance.signOut();
+                                            Future.delayed(
+                                                Duration(milliseconds: 100),
+                                                () => Navigator.of(context)
+                                                    .pushReplacement(
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                LoginPage())));
+                                          }
+                                        },
+                                        icon: Icon(Icons.logout),
+                                      ),
+                                    ),
+                                    Container(
+                                      child: IconButton(
+                                        onPressed: () {
+                                          if (mounted) {
+                                            AuthenticationService().deleteUser(
+                                                "niklas@gmail.com", "123456");
+                                            Future.delayed(
+                                                Duration(milliseconds: 100),
+                                                () => Navigator.of(context)
+                                                    .pushReplacement(
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                LoginPage())));
+                                          }
+                                        },
+                                        icon: Icon(Icons.delete),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -402,242 +378,265 @@ class _HomeTabState extends State<HomeTab> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 0),
-                    child: Stack(
-                      alignment: Alignment.topCenter,
+                    child: Column(
                       children: [
-                        Container(
-                          height: MediaQuery.of(context).size.height / 100 * 84,
-                          width: MediaQuery.of(context).size.width / 100 * 95,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12)),
-                        ),
-                        Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(top: 20),
-                              child: Material(
-                                borderRadius: BorderRadius.circular(12),
-                                elevation: 4,
-                                child: Container(
-                                  height: MediaQuery.of(context).size.height /
-                                      100 *
-                                      40,
-                                  width: MediaQuery.of(context).size.width /
-                                      100 *
-                                      93.5,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(12)),
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 8, right: 8, top: 8, bottom: 8),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            color: Colors.grey[200],
-                                          ),
-                                          child: Padding(
-                                            padding: EdgeInsets.all(2),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                RichText(
-                                                  text: TextSpan(
-                                                    style: new TextStyle(
-                                                      fontSize: 0.0,
-                                                      color: Colors.black,
-                                                    ),
-                                                    children: <TextSpan>[
-                                                      TextSpan(
-                                                        text: 'User: ',
-                                                        style: TextStyle(
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w400),
-                                                      ),
-                                                      TextSpan(
-                                                        text: '${username!}',
-                                                        style: TextStyle(
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w300),
-                                                      ),
-                                                    ],
-                                                  ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 20),
+                          child: Material(
+                            borderRadius: BorderRadius.circular(12),
+                            elevation: 4,
+                            child: Container(
+                              height:
+                                  MediaQuery.of(context).size.height / 100 * 40,
+                              width: MediaQuery.of(context).size.width /
+                                  100 *
+                                  93.5,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12)),
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    left: 8, right: 8, top: 8, bottom: 8),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: Colors.grey[200],
+                                      ),
+                                      child: Padding(
+                                        padding: EdgeInsets.all(2),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            RichText(
+                                              text: TextSpan(
+                                                style: new TextStyle(
+                                                  fontSize: 0.0,
+                                                  color: Colors.black,
                                                 ),
-                                                IconButton(
-                                                  onPressed: () {
-                                                    showUpdateName(context);
-                                                  },
-                                                  icon: Icon(Icons.edit),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        Divider(
-                                          thickness: 0,
-                                          indent: 2,
-                                          endIndent: 2,
-                                        ),
-                                        Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                              color: Colors.grey[200],
-                                            ),
-                                            child: Padding(
-                                              padding: EdgeInsets.all(2),
-                                              child: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  RichText(
-                                                    text: TextSpan(
-                                                      style: new TextStyle(
-                                                        fontSize: 0.0,
-                                                        color: Colors.black,
-                                                      ),
-                                                      children: <TextSpan>[
-                                                        TextSpan(
-                                                          text: 'Email: ',
-                                                          style: TextStyle(
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400),
-                                                        ),
-                                                        TextSpan(
-                                                          text: '${email!}',
-                                                          style: TextStyle(
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w300),
-                                                        ),
-                                                      ],
-                                                    ),
+                                                children: <TextSpan>[
+                                                  TextSpan(
+                                                    text: 'User: ',
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w400),
                                                   ),
-                                                  IconButton(
-                                                    onPressed: () {
-                                                      showUpdateEmail(context);
-                                                    },
-                                                    icon: Icon(Icons.edit),
-                                                  )
-                                                ],
-                                              ),
-                                            )),
-                                        Divider(
-                                          thickness: 0,
-                                          indent: 2,
-                                          endIndent: 2,
-                                        ),
-                                        Expanded(
-                                          child: Container(
-                                            height: 50,
-                                            decoration: BoxDecoration(
-                                                color: Colors.grey[200],
-                                                borderRadius:
-                                                    BorderRadius.circular(12)),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(5.0),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
-                                                children: [
-                                                  Text(
-                                                    'Books $booksamount',
-                                                    style:
-                                                        TextStyle(fontSize: 20),
+                                                  TextSpan(
+                                                    text: '${username!}',
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w300),
                                                   ),
-                                                  Container(
-                                                    height: 30,
-                                                    child: VerticalDivider(
-                                                      thickness: 0,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    'Contacts ${0}',
-                                                    style:
-                                                        TextStyle(fontSize: 20),
-                                                  )
                                                 ],
                                               ),
                                             ),
+                                            IconButton(
+                                              onPressed: () {
+                                                showUpdateName(context);
+                                              },
+                                              icon: Icon(Icons.edit),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Divider(
+                                      thickness: 0,
+                                      indent: 2,
+                                      endIndent: 2,
+                                    ),
+                                    Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          color: Colors.grey[200],
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(2),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              RichText(
+                                                text: TextSpan(
+                                                  style: new TextStyle(
+                                                    fontSize: 0.0,
+                                                    color: Colors.black,
+                                                  ),
+                                                  children: <TextSpan>[
+                                                    TextSpan(
+                                                      text: 'Email: ',
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w400),
+                                                    ),
+                                                    TextSpan(
+                                                      text: '${email!}',
+                                                      style: TextStyle(
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.w300),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              IconButton(
+                                                onPressed: () {
+                                                  showUpdateEmail(context);
+                                                },
+                                                icon: Icon(Icons.edit),
+                                              )
+                                            ],
+                                          ),
+                                        )),
+                                    Divider(
+                                      thickness: 0,
+                                      indent: 2,
+                                      endIndent: 2,
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey[200],
+                                            borderRadius:
+                                                BorderRadius.circular(12)),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: [
+                                              Text(
+                                                'Books $booksamount',
+                                                style: TextStyle(fontSize: 20),
+                                              ),
+                                              Container(
+                                                height: 30,
+                                                child: VerticalDivider(
+                                                  thickness: 0,
+                                                ),
+                                              ),
+                                              Text(
+                                                'Contacts ${0}',
+                                                style: TextStyle(fontSize: 20),
+                                              )
+                                            ],
                                           ),
                                         ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 ),
                               ),
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 20),
-                              child: Material(
-                                borderRadius: BorderRadius.circular(12),
-                                elevation: 4,
-                                child: Container(
-                                  height: MediaQuery.of(context).size.height /
-                                      100 *
-                                      25,
-                                  width: MediaQuery.of(context).size.width /
-                                      100 *
-                                      93.5,
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.fitHeight,
-                                          image:
-                                              AssetImage('assets/empty.png')),
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(12)),
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 8, right: 8, top: 8, bottom: 8),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [],
-                                    ),
-                                  ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 20),
+                          child: Material(
+                            borderRadius: BorderRadius.circular(12),
+                            elevation: 4,
+                            child: Container(
+                              height:
+                                  MediaQuery.of(context).size.height / 100 * 25,
+                              width: MediaQuery.of(context).size.width /
+                                  100 *
+                                  93.5,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      fit: BoxFit.fitHeight,
+                                      image: AssetImage('assets/empty.png')),
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12)),
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    left: 8, right: 8, top: 8, bottom: 8),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [],
                                 ),
                               ),
                             ),
-                            Container(
-                              child: IconButton(
-                                onPressed: () {
-                                  if (mounted) {
-                                    FirebaseAuth.instance.signOut();
-                                  }
-
-                                  Future.delayed(Duration(milliseconds: 100))
-                                      .then((value) => Navigator.of(context)
-                                        ..pushReplacement(MaterialPageRoute(
-                                            builder: (context) =>
-                                                LoginPage())));
-                                },
-                                icon: Icon(Icons.logout),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Material(
+                            elevation: 5,
+                            borderRadius: BorderRadius.circular(10),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white,
+                              ),
+                              width:
+                                  MediaQuery.of(context).size.width / 100 * 94,
+                              height:
+                                  MediaQuery.of(context).size.height / 100 * 9,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Container(
+                                            child: IconButton(
+                                              onPressed: () {
+                                                if (mounted) {
+                                                  FirebaseAuth.instance
+                                                      .signOut();
+                                                  Navigator.of(context)
+                                                      .pushReplacement(
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  LoginPage()));
+                                                }
+                                              },
+                                              icon: Icon(Icons.logout),
+                                            ),
+                                          ),
+                                          Container(
+                                            child: IconButton(
+                                              onPressed: () {
+                                                if (mounted) {
+                                                  AuthenticationService()
+                                                      .deleteUser(
+                                                          "niklas@gmail.com",
+                                                          "123456");
+                                                  Navigator.of(context)
+                                                      .pushReplacement(
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  LoginPage()));
+                                                }
+                                              },
+                                              icon: Icon(Icons.delete),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  )
+                                ],
                               ),
                             ),
-                          ],
+                          ),
                         ),
                       ],
                     ),
@@ -665,7 +664,10 @@ class _HomeTabState extends State<HomeTab> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Enter a new name'),
+                  Text(
+                    "Enter new Name",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                  ),
                   TextField(
                     controller: newName,
                     onChanged: (value) {},
@@ -754,7 +756,10 @@ class _HomeTabState extends State<HomeTab> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Enter a new email'),
+                  Text(
+                    "Enter new Email",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                  ),
                   TextField(
                     controller: newEmail,
                     onChanged: (value) {},

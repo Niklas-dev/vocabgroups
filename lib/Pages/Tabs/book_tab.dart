@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:translator/translator.dart';
 import 'package:vocalgroups/Authentication/Database.dart';
 import 'package:vocalgroups/Utilis/book.dart';
 
@@ -14,6 +15,7 @@ class BookTab extends StatefulWidget {
 }
 
 class _BookTabState extends State<BookTab> {
+  final translator = GoogleTranslator();
   String dropdownValue = "One";
   var selectedbook, selectedType;
   TextEditingController rowOneStringCtrl = TextEditingController();
@@ -28,6 +30,24 @@ class _BookTabState extends State<BookTab> {
   String? currentBookName = "Empty";
   String? lastBookName;
   bool removeMode = false;
+
+  final List<String> allLanguages = [
+    'English',
+    'German',
+    'Italian',
+    'French',
+  ];
+  final List<String> languageCodes = [
+    'en',
+    'de',
+    'it',
+    'fr',
+  ];
+
+  String firstLanguage = "English";
+
+  int firstIndex = 0;
+  int secondIndex = 0;
 
   getCurrentBook() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -82,6 +102,54 @@ class _BookTabState extends State<BookTab> {
                             ),
                           ),
                         ),
+                        if (currentBookName != "Empty")
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(left: 14.0, right: 14.0),
+                            child: StreamBuilder<Object>(
+                                stream: DatabaseService()
+                                    .dataCollection
+                                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                                    .collection('books')
+                                    .doc(currentBookName!)
+                                    .snapshots(),
+                                builder: (context, AsyncSnapshot snapshot) {
+                                  if (snapshot.hasData) {
+                                    String leftRowName =
+                                        snapshot.data!.get('leftColumnName');
+                                    String rightRowName =
+                                        snapshot.data!.get('rightColumnName');
+                                    return Container(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            child: Text(
+                                              leftRowName,
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            child: Text(
+                                              rightRowName,
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  } else {
+                                    return Container();
+                                  }
+                                }),
+                          ),
                         LayoutBuilder(
                           builder: (context, constraints) {
                             if (currentBookName != "Empty") {
@@ -104,7 +172,7 @@ class _BookTabState extends State<BookTab> {
                                                   .size
                                                   .height /
                                               100 *
-                                              68,
+                                              66,
                                           child: ListView.builder(
                                             scrollDirection: Axis.vertical,
                                             shrinkWrap: true,
@@ -222,7 +290,7 @@ class _BookTabState extends State<BookTab> {
                                 child: Container(
                                   height: MediaQuery.of(context).size.height /
                                       100 *
-                                      68,
+                                      66,
                                   child: Padding(
                                     padding: const EdgeInsets.all(40.0),
                                     child: Container(
@@ -243,27 +311,29 @@ class _BookTabState extends State<BookTab> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Container(
-                              width:
-                                  MediaQuery.of(context).size.width / 100 * 24,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                color: Colors.lightBlue,
+                            if (currentBookName != "Empty")
+                              Container(
+                                width: MediaQuery.of(context).size.width /
+                                    100 *
+                                    26,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: const Color(0xff3F72AF),
+                                ),
+                                child: IconButton(
+                                  iconSize: 25,
+                                  onPressed: () {
+                                    print(removeMode);
+                                    if (removeMode) {
+                                      removeMode = false;
+                                    } else {
+                                      removeMode = true;
+                                    }
+                                    if (mounted) setState(() {});
+                                  },
+                                  icon: Icon(Icons.remove),
+                                ),
                               ),
-                              child: IconButton(
-                                iconSize: 25,
-                                onPressed: () {
-                                  print(removeMode);
-                                  if (removeMode) {
-                                    removeMode = false;
-                                  } else {
-                                    removeMode = true;
-                                  }
-                                  if (mounted) setState(() {});
-                                },
-                                icon: Icon(Icons.remove),
-                              ),
-                            ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
@@ -361,23 +431,25 @@ class _BookTabState extends State<BookTab> {
                                 ),
                               ),
                             ),
-                            Container(
-                              width:
-                                  MediaQuery.of(context).size.width / 100 * 24,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                color: Colors.lightBlue,
+                            if (currentBookName != "Empty")
+                              Container(
+                                width: MediaQuery.of(context).size.width /
+                                    100 *
+                                    26,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: const Color(0xff3F72AF),
+                                ),
+                                child: IconButton(
+                                  iconSize: 25,
+                                  onPressed: () {
+                                    removeMode = false;
+                                    if (mounted) setState(() {});
+                                    showAddRow(context);
+                                  },
+                                  icon: Icon(Icons.add),
+                                ),
                               ),
-                              child: IconButton(
-                                iconSize: 25,
-                                onPressed: () {
-                                  removeMode = false;
-                                  if (mounted) setState(() {});
-                                  showAddRow(context);
-                                },
-                                icon: Icon(Icons.add),
-                              ),
-                            ),
                           ],
                         ),
                       ],
@@ -627,30 +699,32 @@ class _BookTabState extends State<BookTab> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                100 *
-                                                22,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          color: Colors.lightBlue,
+                                      if (currentBookName != "Empty")
+                                        Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              100 *
+                                              22,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            color: const Color(0xff3F72AF),
+                                          ),
+                                          child: IconButton(
+                                            iconSize: 25,
+                                            onPressed: () {
+                                              print(removeMode);
+                                              if (removeMode) {
+                                                removeMode = false;
+                                              } else {
+                                                removeMode = true;
+                                              }
+                                              if (mounted) setState(() {});
+                                            },
+                                            icon: Icon(Icons.remove),
+                                          ),
                                         ),
-                                        child: IconButton(
-                                          iconSize: 25,
-                                          onPressed: () {
-                                            print(removeMode);
-                                            if (removeMode) {
-                                              removeMode = false;
-                                            } else {
-                                              removeMode = true;
-                                            }
-                                            if (mounted) setState(() {});
-                                          },
-                                          icon: Icon(Icons.remove),
-                                        ),
-                                      ),
                                       Padding(
                                         padding: const EdgeInsets.all(2.0),
                                         child: Container(
@@ -765,26 +839,28 @@ class _BookTabState extends State<BookTab> {
                                           ),
                                         ),
                                       ),
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                100 *
-                                                22,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          color: Colors.lightBlue,
+                                      if (currentBookName != "Empty")
+                                        Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              100 *
+                                              22,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            color: const Color(0xff3F72AF),
+                                          ),
+                                          child: IconButton(
+                                            iconSize: 25,
+                                            onPressed: () {
+                                              removeMode = false;
+                                              if (mounted) setState(() {});
+                                              showAddRowSmallScreen(context);
+                                            },
+                                            icon: Icon(Icons.add),
+                                          ),
                                         ),
-                                        child: IconButton(
-                                          iconSize: 25,
-                                          onPressed: () {
-                                            removeMode = false;
-                                            if (mounted) setState(() {});
-                                            showAddRowSmallScreen(context);
-                                          },
-                                          icon: Icon(Icons.add),
-                                        ),
-                                      ),
                                     ],
                                   ),
                                 ),
@@ -811,14 +887,14 @@ class _BookTabState extends State<BookTab> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(20.0))),
             content: Container(
-              height: MediaQuery.of(context).size.height / 100 * 30,
+              height: MediaQuery.of(context).size.height / 100 * 33,
               width: MediaQuery.of(context).size.width / 100 * 100,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Add row to current book",
+                    "Add",
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w600,
@@ -878,6 +954,18 @@ class _BookTabState extends State<BookTab> {
                                 onChanged: (value) {},
                                 style: TextStyle(color: Colors.black),
                                 decoration: InputDecoration(
+                                  suffixIcon: IconButton(
+                                    icon: Icon(Icons.translate),
+                                    onPressed: () async {
+                                      Translation translation =
+                                          await translator.translate(
+                                              rowOneStringCtrl.text.trim(),
+                                              to: languageCodes[firstIndex]);
+
+                                      rowTwoStringCtrl.text = translation.text;
+                                      setState(() {});
+                                    },
+                                  ),
                                   contentPadding: EdgeInsets.symmetric(
                                       vertical:
                                           MediaQuery.of(context).size.height /
@@ -898,6 +986,65 @@ class _BookTabState extends State<BookTab> {
                       ],
                     ),
                   ),
+                  StatefulBuilder(builder: (context, setState) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            rowOneStringCtrl.text = "";
+                            rowTwoStringCtrl.text = "";
+                          },
+                          child: Text(
+                            "Clear All",
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 6.0),
+                              child: Container(
+                                child: Text("to"),
+                              ),
+                            ),
+                            DropdownButton(
+                              value: firstLanguage,
+                              iconSize: 20,
+                              elevation: 1,
+                              style: const TextStyle(
+                                  color: Colors.black, fontSize: 16),
+                              underline: Container(
+                                height: 1,
+                                color: Color(0xff112d4e),
+                              ),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  firstLanguage = newValue!;
+                                  firstIndex = allLanguages.indexOf(newValue);
+                                });
+                              },
+                              items: allLanguages.map<DropdownMenuItem<String>>(
+                                  (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(value),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  }),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [

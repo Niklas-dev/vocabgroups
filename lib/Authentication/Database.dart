@@ -12,6 +12,7 @@ class DatabaseService {
 
   Future updateUserData(String username, String email) async {
     List<String> groupIDs = [];
+
     return await dataCollection.doc(uid).set({
       'username': username,
       'email': email,
@@ -21,6 +22,10 @@ class DatabaseService {
 
   Stream<QuerySnapshot> get data {
     return dataCollection.snapshots();
+  }
+
+  Future deleteUserDB(userUID) async {
+    dataCollection.doc(userUID).delete();
   }
 
   Future createGroup(String groupName, String userUID) async {
@@ -88,19 +93,60 @@ class DatabaseService {
     } catch (e) {}
   }
 
+  Future getBookFromGroup(
+      String groupID, String userUID, String bookname) async {
+    DocumentSnapshot groupbooks = await DatabaseService()
+        .groupCollection
+        .doc(groupID)
+        .collection('books')
+        .doc(bookname)
+        .get();
+
+    String uploadbookname = groupbooks['bookname'];
+    //int uploadbookindex = userbooks['index'];
+    //bool uploadbookpublic = userbooks['public'];
+    String uploadbookleftColumnName = groupbooks['leftColumnName'];
+    String uploadbookrightColumnName = groupbooks['rightColumnName'];
+    List uploadbookleftContent = groupbooks['leftContent'];
+    List uploadbookrightContent = groupbooks['rightContent'];
+
+    try {
+      await dataCollection.doc(userUID).collection('books').doc(bookname).set({
+        'bookname': uploadbookname,
+        'index': null,
+        'public': null,
+        'leftColumnName': uploadbookleftColumnName,
+        'rightColumnName': uploadbookrightColumnName,
+        'leftContent': uploadbookleftContent,
+        'rightContent': uploadbookrightContent,
+      });
+    } catch (e) {}
+  }
+
   Future leaveGroup(String groupID, String userUID) async {
-    List<String> members = [];
+    DocumentSnapshot userdata =
+        await DatabaseService().dataCollection.doc(userUID).get();
+    DocumentSnapshot groupdata =
+        await DatabaseService().groupCollection.doc(groupID).get();
+
+    List<dynamic> members = groupdata.get("members");
+    List<dynamic> groupIDs = userdata.get("groupID");
+
     members.remove(userUID);
 
-    List<String> groupIDs = [];
     groupIDs.remove(groupID);
 
     try {
-      print("ids $groupIDs");
+      await groupCollection.doc(groupID).update({
+        'members': members,
+      });
 
       await dataCollection.doc(userUID).update({
         'groupID': groupIDs,
       });
-    } catch (e) {}
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }

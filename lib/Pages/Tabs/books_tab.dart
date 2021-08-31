@@ -16,6 +16,10 @@ class _BooksTabState extends State<BooksTab> {
   TextEditingController booknameCtrl = TextEditingController();
   TextEditingController leftnameCtrl = TextEditingController();
   TextEditingController rightnameCtrl = TextEditingController();
+  TextEditingController newbooknameCtrl = TextEditingController();
+  TextEditingController newleftnameCtrl = TextEditingController();
+  TextEditingController newrightnameCtrl = TextEditingController();
+
   updateStatePage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('onTanslator', false);
@@ -51,6 +55,7 @@ class _BooksTabState extends State<BooksTab> {
                             Padding(
                               padding: const EdgeInsets.all(6),
                               child: Container(
+                                alignment: Alignment.center,
                                 width: MediaQuery.of(context).size.width /
                                     100 *
                                     95,
@@ -164,12 +169,14 @@ class _BooksTabState extends State<BooksTab> {
                                                       const EdgeInsets.only(
                                                           left: 2,
                                                           right: 2,
-                                                          top: 40),
+                                                          top: 20),
                                                   child: Wrap(
                                                     children: [
                                                       Text(
                                                         list[index - 1]
                                                             ['bookname'],
+                                                        textAlign:
+                                                            TextAlign.center,
                                                         style: TextStyle(
                                                             fontSize: 20,
                                                             fontWeight:
@@ -219,12 +226,18 @@ class _BooksTabState extends State<BooksTab> {
                                                           ),
                                                         ),
                                                       ),
+                                                      /*
                                                       Padding(
                                                         padding:
                                                             const EdgeInsets
                                                                 .all(2),
                                                         child: InkWell(
-                                                          onTap: () {},
+                                                          onTap: () {
+                                                            showEditBook(
+                                                                context,
+                                                                list[index - 1][
+                                                                    'bookname']);
+                                                          },
                                                           child: Icon(
                                                             Icons.edit,
                                                             size: 22,
@@ -232,7 +245,7 @@ class _BooksTabState extends State<BooksTab> {
                                                                 0xff112d4e),
                                                           ),
                                                         ),
-                                                      ),
+                                                      ),*/
                                                     ],
                                                   ),
                                                 ),
@@ -271,6 +284,7 @@ class _BooksTabState extends State<BooksTab> {
                     child: Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(6),
@@ -455,20 +469,6 @@ class _BooksTabState extends State<BooksTab> {
                                                             ),
                                                           ),
                                                         ),
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(2),
-                                                          child: InkWell(
-                                                            onTap: () {},
-                                                            child: Icon(
-                                                              Icons.edit,
-                                                              size: 18,
-                                                              color: Color(
-                                                                  0xff112d4e),
-                                                            ),
-                                                          ),
-                                                        ),
                                                       ],
                                                     ),
                                                   ),
@@ -527,7 +527,7 @@ class _BooksTabState extends State<BooksTab> {
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
           content: Container(
-            height: MediaQuery.of(context).size.height / 100 * 40,
+            height: MediaQuery.of(context).size.height / 100 * 36,
             width: MediaQuery.of(context).size.width / 100 * 100,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -565,13 +565,6 @@ class _BooksTabState extends State<BooksTab> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 5),
-                            child: Text(
-                              "Left row name",
-                              style: TextStyle(fontSize: 12),
-                            ),
-                          ),
                           Container(
                             width: MediaQuery.of(context).size.width / 100 * 38,
                             child: TextField(
@@ -585,7 +578,7 @@ class _BooksTabState extends State<BooksTab> {
                                             100 *
                                             0,
                                     horizontal: 10.0),
-                                labelText: 'Left',
+                                labelText: 'Left Row Name',
                                 labelStyle: TextStyle(color: Colors.grey),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
@@ -599,13 +592,6 @@ class _BooksTabState extends State<BooksTab> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 5),
-                            child: Text(
-                              "Right row name",
-                              style: TextStyle(fontSize: 12),
-                            ),
-                          ),
                           Container(
                             width: MediaQuery.of(context).size.width / 100 * 38,
                             child: TextField(
@@ -619,8 +605,10 @@ class _BooksTabState extends State<BooksTab> {
                                             100 *
                                             0,
                                     horizontal: 10.0),
-                                labelText: 'Right',
-                                labelStyle: TextStyle(color: Colors.grey),
+                                labelText: 'Right Row Name',
+                                labelStyle: TextStyle(
+                                  color: Colors.grey,
+                                ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
@@ -685,7 +673,12 @@ class _BooksTabState extends State<BooksTab> {
                           if (booknameCtrl.text.trim().length <= 20) {
                             int index = await createBookIndex();
                             Book().addBook(
-                                booknameCtrl.text.trim(), public, index);
+                              booknameCtrl.text.trim(),
+                              public,
+                              index,
+                              leftnameCtrl.text.trim(),
+                              rightnameCtrl.text.trim(),
+                            );
                             Navigator.of(context).pop();
                           } else {
                             print("Too long");
@@ -888,7 +881,12 @@ class _BooksTabState extends State<BooksTab> {
                           onTap: () async {
                             int index = await createBookIndex();
                             Book().addBook(
-                                booknameCtrl.text.trim(), public, index);
+                              booknameCtrl.text.trim(),
+                              public,
+                              index,
+                              leftnameCtrl.text.trim(),
+                              rightnameCtrl.text.trim(),
+                            );
                             Navigator.of(context).pop();
                           },
                           child: Container(
@@ -925,5 +923,168 @@ class _BooksTabState extends State<BooksTab> {
     int currentAmount = await Book().getBooksAmount();
     setIndex = currentAmount;
     return setIndex;
+  }
+
+  void showEditBook(BuildContext context, String oldbookname) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          insetPadding: EdgeInsets.all(20),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          content: Container(
+            height: MediaQuery.of(context).size.height / 100 * 36,
+            width: MediaQuery.of(context).size.width / 100 * 100,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Edit",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width / 100 * 71,
+                    child: TextField(
+                      controller: newbooknameCtrl,
+                      onChanged: (value) {},
+                      style: TextStyle(color: Colors.black),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical:
+                                MediaQuery.of(context).size.height / 100 * 0,
+                            horizontal: 10.0),
+                        labelText: 'Bookname',
+                        labelStyle: TextStyle(color: Colors.grey),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        fillColor: Colors.transparent,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 4.0),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width / 100 * 35,
+                          child: TextField(
+                            controller: newrightnameCtrl,
+                            onChanged: (value) {},
+                            style: TextStyle(color: Colors.black),
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical: MediaQuery.of(context).size.height /
+                                      100 *
+                                      0,
+                                  horizontal: 10.0),
+                              labelText: 'Right row name',
+                              labelStyle: TextStyle(color: Colors.grey),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              fillColor: Colors.transparent,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width / 100 * 35,
+                          child: TextField(
+                            controller: newleftnameCtrl,
+                            onChanged: (value) {},
+                            style: TextStyle(color: Colors.black),
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical: MediaQuery.of(context).size.height /
+                                      100 *
+                                      0,
+                                  horizontal: 10.0),
+                              labelText: 'Left row name',
+                              labelStyle: TextStyle(color: Colors.grey),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              fillColor: Colors.transparent,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(8)),
+                          height: MediaQuery.of(context).size.height / 100 * 6,
+                          width: MediaQuery.of(context).size.width / 100 * 30,
+                          child: Center(
+                              child: Text(
+                            "Cancel",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: InkWell(
+                        onTap: () async {
+                          Book().editBook(
+                              oldbookname,
+                              newbooknameCtrl.text.trim(),
+                              newleftnameCtrl.text.trim(),
+                              newrightnameCtrl.text.trim(),
+                              public,
+                              0);
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.blueAccent,
+                              borderRadius: BorderRadius.circular(8)),
+                          height: MediaQuery.of(context).size.height / 100 * 6,
+                          width: MediaQuery.of(context).size.width / 100 * 30,
+                          child: Center(
+                              child: Text(
+                            "Apply",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }
